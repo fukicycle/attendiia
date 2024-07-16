@@ -13,15 +13,15 @@
 ## 画面サンプル（案)
 - 出欠画面
 
-  ![image](https://github.com/user-attachments/assets/ed789aa0-f1dc-4eb4-90de-08bdd22282a7)
+<img src='https://github.com/user-attachments/assets/ed789aa0-f1dc-4eb4-90de-08bdd22282a7' width='480'/>
 
 - 連絡画面
 
-![image](https://github.com/user-attachments/assets/caaedda7-b825-4127-be82-82b3f990a27a)
+<img src='https://github.com/user-attachments/assets/caaedda7-b825-4127-be82-82b3f990a27a' width='480'/>
 
 - 設定画面
 
-![image](https://github.com/user-attachments/assets/e9870e45-26f1-4da4-8f3e-5c3fad289ec3)
+<img src='https://github.com/user-attachments/assets/e9870e45-26f1-4da4-8f3e-5c3fad289ec3' width='480'/>
 
 
 ## 著者
