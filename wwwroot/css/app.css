@@ -1,0 +1,20 @@
+html,
+body,
+#app {
+ height: 100%;
+}
+
+
+/* reset default style */
+
+* {
+ margin: 0;
+ padding :0;
+ box-sizing: border-box;
+}
+
+input,
+select,
+button {
+ appearance: none;
+}
