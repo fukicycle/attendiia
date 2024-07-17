@@ -52,7 +52,7 @@ body {
 button {
     width: 160px;
     padding: var(--pad-l);
-    background-color: var(--primary-color-500);
+    background-color: var(--primary-color-400);
     box-shadow: 0 0 4px rgba(0, 0, 0, .25);
     outline: none;
     border: none;
