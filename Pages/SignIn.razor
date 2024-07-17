@@ -1,13 +1,22 @@
 ﻿@page "/sign-in"
+@inject IAuthenticationService FirebaseAuthenticationService
+@inject NavigationManager NavigationManager
 <div class="fullscreen">
-    <img class="icon" src="icon-192.png" />
-    <div class="function">
-        <div class="input-group">
-            <input type="email" placeholder="メールアドレス" />
-            <input type="password" placeholder="パスワード" />
+    <div class="top">
+    </div>
+    <div class="center">
+        <img class="icon" src="icon-192.png" />
+        <div class="function">
+            <div class="input-group">
+                <input type="email" placeholder="メールアドレス" />
+                <input type="password" placeholder="パスワード" />
+            </div>
+            <button @onclick=@SignInButtonOnClick>サインイン</button>
+            <div class="or">または</div>
+            <button @onclick=@RegisterButtonOnClick>アカウント作成</button>
         </div>
-        <button>サインイン</button>
-        <div>または</div>
-        <button>アカウント作成</button>
+    </div>
+    <div class="bottom">
+        @_message
     </div>
 </div>

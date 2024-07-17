@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Blazored.LocalStorage;
 using Attendiia;
-using Attendiia.Authenticaion;
+using Attendiia.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -36,6 +36,6 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<FirebaseAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(
     p => p.GetRequiredService<FirebaseAuthenticationStateProvider>());
-builder.Services.AddScoped<IAuthenticationService, FirebaseAuthenticationServices>();
+builder.Services.AddScoped<IAuthenticationService, FirebaseAuthenticationService>();
 
 await builder.Build().RunAsync();

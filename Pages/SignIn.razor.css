@@ -7,11 +7,16 @@
     z-index: 100;
     background-color: var(--primary-color-400);
     color: var(--white);
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 24px minmax(0, 1fr) 48px;
+}
+
+.center {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    gap: var(--pad-xl);
 }
 
 .icon {
@@ -24,7 +29,6 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: var(--pad-m);
 }
 
 .input-group {
@@ -32,5 +36,17 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: var(--pad-s);
+    gap: var(--pad-l);
+    padding: var(--pad-l);
+}
+
+.or {
+    font-size: 12px;
+    padding: var(--pad-l);
+}
+
+.bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

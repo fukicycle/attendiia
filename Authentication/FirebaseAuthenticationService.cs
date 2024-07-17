@@ -1,20 +1,20 @@
 using Firebase.Auth;
 using Firebase.Auth.Providers;
 
-namespace Attendiia.Authenticaion;
+namespace Attendiia.Authentication;
 
-public sealed class FirebaseAuthenticationServices : IAuthenticationService
+public sealed class FirebaseAuthenticationService : IAuthenticationService
 {
     private readonly FirebaseAuthenticationStateProvider _firebaseAuthenticationStateProvider;
     private readonly FirebaseAuthConfig _authConfig;
 
-    public FirebaseAuthenticationServices(FirebaseAuthenticationStateProvider firebaseAuthenticationStateProvider)
+    public FirebaseAuthenticationService(FirebaseAuthenticationStateProvider firebaseAuthenticationStateProvider)
     {
         _firebaseAuthenticationStateProvider = firebaseAuthenticationStateProvider;
         _authConfig = new FirebaseAuthConfig();
     }
 
-    public async Task<LoginUserInfo?> LoginAsync(LoginModel loginModel)
+    public async Task<bool> LoginAsync(LoginModel loginModel)
     {
         try
         {
@@ -23,18 +23,19 @@ public sealed class FirebaseAuthenticationServices : IAuthenticationService
             UserCredential userCredential =
                 await client.SignInWithEmailAndPasswordAsync(loginModel.UserId, loginModel.Password);
             string idToken = await userCredential.User.GetIdTokenAsync();
-            await _firebaseAuthenticationStateProvider.NotifySignIn(loginModel.UserId, idToken);
-            return new LoginUserInfo(
+            LoginUserInfo loginUserInfo = new LoginUserInfo(
                 userCredential.User.Info.FirstName,
                 userCredential.User.Info.LastName,
                 userCredential.User.Info.DisplayName,
                 userCredential.User.Info.Email,
                 userCredential.User.Info.PhotoUrl
             );
+            await _firebaseAuthenticationStateProvider.NotifySignIn(loginUserInfo, idToken);
+            return true;
         }
         catch (Exception)
         {
-            return null;
+            return false;
         }
     }
 

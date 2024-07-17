@@ -3,7 +3,7 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Headers;
 
-namespace Attendiia.Authenticaion;
+namespace Attendiia.Authentication;
 
 public sealed class FirebaseAuthenticationStateProvider : AuthenticationStateProvider
 {
@@ -21,10 +21,10 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
     {
         string? accessToken =
             await _localStorageService.GetItemAsync<string>(LocalStorageKey.ACCESS_TOKEN);
-        string? userId =
-            await _localStorageService.GetItemAsync<string>(LocalStorageKey.USER_ID);
+        LoginUserInfo? loginUserInfo =
+            await _localStorageService.GetItemAsync<LoginUserInfo>(LocalStorageKey.USER_INFO);
 
-        if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(userId))
+        if (string.IsNullOrEmpty(accessToken) || loginUserInfo == null)
         {
             return new AuthenticationState(
                 new ClaimsPrincipal(
@@ -37,23 +37,23 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
             new ClaimsPrincipal(
                 new ClaimsIdentity(
                     new Claim[]{
-                        new Claim(ClaimTypes.Name,userId)
+                        new Claim(ClaimTypes.Name,loginUserInfo.Email)
                     }, "apiAuth"
                 )
             )
         );
     }
 
-    public async Task NotifySignIn(string userId, string accessToken)
+    public async Task NotifySignIn(LoginUserInfo loginUserInfo, string accessToken)
     {
-        await _localStorageService.SetItemAsync(LocalStorageKey.USER_ID, userId);
+        await _localStorageService.SetItemAsync(LocalStorageKey.USER_INFO, loginUserInfo);
         await _localStorageService.SetItemAsync(LocalStorageKey.ACCESS_TOKEN, accessToken);
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 
     public async Task NotifySignOut()
     {
-        await _localStorageService.RemoveItemAsync(LocalStorageKey.USER_ID);
+        await _localStorageService.RemoveItemAsync(LocalStorageKey.USER_INFO);
         await _localStorageService.RemoveItemAsync(LocalStorageKey.ACCESS_TOKEN);
         if (_httpClient.DefaultRequestHeaders.Authorization != null)
         {

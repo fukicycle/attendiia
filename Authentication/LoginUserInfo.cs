@@ -1,4 +1,4 @@
-namespace Attendiia.Authenticaion;
+namespace Attendiia.Authentication;
 
 public sealed class LoginUserInfo
 {

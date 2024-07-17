@@ -1,9 +1,9 @@
 using Firebase.Auth;
 
-namespace Attendiia.Authenticaion;
+namespace Attendiia.Authentication;
 
 public interface IAuthenticationService
 {
-    Task<LoginUserInfo?> LoginAsync(LoginModel loginModel);
+    Task<bool> LoginAsync(LoginModel loginModel);
     Task LogoutAsync();
 }
