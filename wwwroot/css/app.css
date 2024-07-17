@@ -46,6 +46,7 @@ body {
     background-color: var(--white);
     color: var(--black);
     padding-bottom: env(safe-area-inset-bottom);
+    overflow: hidden;
 }
 
 button {
