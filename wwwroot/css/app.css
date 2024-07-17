@@ -1,20 +1,37 @@
 html,
 body,
 #app {
- height: 100%;
+    height: 100%;
 }
 
 
 /* reset default style */
 
 * {
- margin: 0;
- padding :0;
- box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 input,
 select,
 button {
- appearance: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+:root {
+    --primary-color-500: #385C33;
+    --primary-color-400: #4E885C;
+    --primary-color-300: #6EB98F;
+    --primary-color-200: #A6D8C2;
+    --white: #F7F7F7;
+    --gray: #EEEEEE;
+    --black: #333333;
+}
+
+body {
+    background-color: var(--white);
+    color: var(--black);
+    padding-bottom: env(safe-area-inset-bottom);
 }

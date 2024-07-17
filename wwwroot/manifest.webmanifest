@@ -1,11 +1,11 @@
 {
-  "name": "Attendiia",
-  "short_name": "Attendiia",
+  "name": "アテンディア",
+  "short_name": "アテンディア",
   "id": "./",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#03173d",
+  "background_color": "#385C33",
+  "theme_color": "#385C33",
   "prefer_related_applications": false,
   "icons": [
     {
