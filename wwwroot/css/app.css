@@ -2,6 +2,10 @@ html,
 body,
 #app {
     height: 100%;
+    font-family: "Noto Sans JP", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
 }
 
 
@@ -20,6 +24,10 @@ button {
     -webkit-appearance: none;
 }
 
+.bold {
+    font-weight: 600 !important;
+}
+
 :root {
     --primary-color-500: #385C33;
     --primary-color-400: #4E885C;
@@ -28,6 +36,10 @@ button {
     --white: #F7F7F7;
     --gray: #EEEEEE;
     --black: #333333;
+    --pad-s: 2px;
+    --pad-m: 4px;
+    --pad-l: 8px;
+    --pad-xl: 16px;
 }
 
 body {
