@@ -7,21 +7,39 @@
     z-index: 100;
     background-color: var(--primary-color-500);
     color: var(--white);
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: 24px minmax(0, 1fr) 48px;
-}
-
-.center {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.login-form {
+    display: grid;
+    text-align: center;
+    grid-template-columns: auto;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 2fr) auto;
+    padding: 32px 16px;
+    background-color: var(--white);
+    color: var(--black);
+    border-radius: 32px;
+    height: 70%;
+}
+
+.title {
+    font-family: "RocknRoll One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 24px;
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .icon {
-    width: 192px;
-    height: 192px;
+    width: 96px;
+    height: 96px;
+    padding: var(--pad-xl);
 }
 
 .function {
@@ -36,8 +54,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: var(--pad-l);
-    padding: var(--pad-l);
+    gap: var(--pad-xl);
 }
 
 .or {
@@ -45,7 +62,11 @@
     padding: var(--pad-l);
 }
 
-.bottom {
+.error {
+    position: fixed;
+    bottom: 40px;
+    left: 0px;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;

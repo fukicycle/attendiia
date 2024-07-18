@@ -10,6 +10,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .register-form {
@@ -21,8 +22,9 @@
     background-color: var(--white);
     box-shadow: 0 0 8px rgba(0, 0, 0, .25);
     color: var(--black);
-    padding: var(--pad-xl) var(--pad-l);
-    border-radius: var(--pad-xl);
+    padding: 32px 16px;
+    border-radius: 32px;
+    height: 70%;
 }
 
 .title {
@@ -34,7 +36,5 @@
 }
 
 .input-form>input {
-    border-radius: 0;
-    border-bottom: 1px solid var(--primary-color-500);
     text-align: left;
 }

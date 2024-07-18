@@ -2,21 +2,19 @@
 @inject IAuthenticationService FirebaseAuthenticationService
 @inject NavigationManager NavigationManager
 <div class="fullscreen">
-    <div class="top">
-    </div>
-    <div class="center">
-        <img class="icon" src="icon-192.png" />
+    <div class="login-form">
+        <span class="title">アテンディア</span>
+        <div class="input-group">
+            <input type="email" placeholder="メールアドレス" />
+            <input type="password" placeholder="パスワード" />
+        </div>
         <div class="function">
-            <div class="input-group">
-                <input type="email" placeholder="メールアドレス" />
-                <input type="password" placeholder="パスワード" />
-            </div>
             <button @onclick=@SignInButtonOnClick>サインイン</button>
             <div class="or">または</div>
-            <button @onclick=@RegisterButtonOnClick>アカウント作成</button>
+            <button class="outline" @onclick=@RegisterButtonOnClick>アカウント作成</button>
         </div>
     </div>
-    <div class="bottom">
+    <div class="error">
         @_message
     </div>
 </div>
