@@ -16,8 +16,8 @@ public sealed class FirebaseAuthenticationService : IAuthenticationService
             ApiKey = firebaseSettings.FirebaseApiKey,
             AuthDomain = firebaseSettings.FirebaseAuthDomain,
             Providers = new FirebaseAuthProvider[] {
-             new EmailProvider(),
-            new GoogleProvider()
+                new EmailProvider(),
+                new GoogleProvider()
             }
         };
     }
