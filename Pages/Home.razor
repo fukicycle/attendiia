@@ -1,3 +1,39 @@
 ﻿@page "/"
+@using Attendiia.Models
+@using Attendiia.Services.Interface
+@using System.Text
+@inject IFirebaseDatabaseService FirebaseDatabaseService
 @attribute [Authorize]
 <div>出欠</div>
+<button @onclick=@AddButtonOnClick>テスト追加ボタン</button>
+@code {
+    private async Task AddButtonOnClick()
+    {
+        string code = GenerateCode();
+        if (await CheckAsync(code))
+        {
+
+        }
+        else
+        {
+            await FirebaseDatabaseService.AddAsync("group", new Group(code, "Test group"));
+        }
+        @* await FirebaseDatabaseService.AddAsync("group", new Group("TEST02", "Test group")); *@
+    }
+
+    private string GenerateCode()
+    {
+        StringBuilder sb = new StringBuilder(6);
+        for (int i = 0; i < sb.Capacity; i++)
+        {
+            sb.Append(Convert.ToChar(Random.Shared.Next(65, 65 + 26)));
+        }
+        return sb.ToString();
+    }
+
+    private async Task<bool> CheckAsync(string code)
+    {
+        var list = await FirebaseDatabaseService.GetListAsync<Group>("group");
+        return list.Any(a => a.GroupCode == code);
+    }
+}
