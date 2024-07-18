@@ -4,7 +4,6 @@ using Blazored.LocalStorage;
 using Attendiia;
 using Attendiia.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
-using Attendiia.DelegatingHandlers;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
