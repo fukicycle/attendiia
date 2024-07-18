@@ -5,8 +5,8 @@
     <div class="login-form">
         <span class="title">アテンディア</span>
         <div class="input-group">
-            <input type="email" placeholder="メールアドレス" />
-            <input type="password" placeholder="パスワード" />
+            <input @bind=@userId type="email" placeholder="メールアドレス" />
+            <input @bind=@password type="password" placeholder="パスワード" />
         </div>
         <div class="function">
             <button @onclick=@SignInButtonOnClick>サインイン</button>

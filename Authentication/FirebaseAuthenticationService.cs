@@ -8,10 +8,18 @@ public sealed class FirebaseAuthenticationService : IAuthenticationService
     private readonly FirebaseAuthenticationStateProvider _firebaseAuthenticationStateProvider;
     private readonly FirebaseAuthConfig _authConfig;
 
-    public FirebaseAuthenticationService(FirebaseAuthenticationStateProvider firebaseAuthenticationStateProvider)
+    public FirebaseAuthenticationService(FirebaseAuthenticationStateProvider firebaseAuthenticationStateProvider, FirebaseSettings firebaseSettings)
     {
         _firebaseAuthenticationStateProvider = firebaseAuthenticationStateProvider;
-        _authConfig = new FirebaseAuthConfig();
+        _authConfig = new FirebaseAuthConfig
+        {
+            ApiKey = firebaseSettings.FirebaseApiKey,
+            AuthDomain = firebaseSettings.FirebaseAuthDomain,
+            Providers = new FirebaseAuthProvider[] {
+             new EmailProvider(),
+            new GoogleProvider()
+            }
+        };
     }
 
     public async Task<bool> LoginAsync(LoginModel loginModel)
