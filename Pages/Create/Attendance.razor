@@ -7,19 +7,23 @@
         <div class="title">新しい出欠を作成</div>
         <EditForm class="input-area" Model="@attendanceCreateForm" OnValidSubmit="OnValidRequest">
             <DataAnnotationsValidator />
-            <div>
+            <div class="input-label">
                 <div>題名(20文字まで)</div>
                 <ValidationMessage For="() => attendanceCreateForm.Title" />
             </div>
-            <InputText disabled=@isSending @bind-Value=@attendanceCreateForm.Title />
-            <div>
+            <InputText disabled=@isLoading @bind-Value=@attendanceCreateForm.Title />
+            <div class="input-label">
                 <div>説明(200文字まで)</div>
                 <ValidationMessage For="() => attendanceCreateForm.Description" />
             </div>
-            <InputTextArea disabled=@isSending @bind-Value=@attendanceCreateForm.Description />
+            <InputTextArea disabled=@isLoading @bind-Value=@attendanceCreateForm.Description />
             <InputText hidden @bind-Value=@attendanceCreateForm.AuthorEmail />
-            <button disabled=@isSending type="submit">作成する</button>
+            <button disabled=@isLoading type="submit">作成する</button>
         </EditForm>
+        @if (isLoading)
+        {
+            <Loader />
+        }
     </div>
     <Return ReturnTo="" />
 </Animate>

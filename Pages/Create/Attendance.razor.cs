@@ -7,14 +7,14 @@ namespace Attendiia.Pages.Create;
 public partial class Attendance
 {
     private AttendanceCreateForm attendanceCreateForm = new AttendanceCreateForm();
-    private bool isSending = false;
+    private bool isLoading = false;
 
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        isSending = true;
+        isLoading = true;
         if (authenticationState == null)
         {
             throw new ArgumentNullException("ログインユーザの情報を取得する際にエラーが発生しました。管理者へ連絡してください。");
@@ -27,12 +27,12 @@ public partial class Attendance
         }
         attendanceCreateForm.AuthorEmail = email;
         await base.OnInitializedAsync();
-        isSending = false;
+        isLoading = false;
     }
 
     private async Task OnValidRequest()
     {
-        isSending = true;
+        isLoading = true;
         await AttendanceService.CreateAttendanceAsync(attendanceCreateForm);
         NavigationManager.NavigateTo("");
     }

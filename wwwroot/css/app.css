@@ -95,7 +95,6 @@ input {
 .validation-message {
     font-size: .8em;
     color: #CC2222;
-    padding-left: var(--pad-l);
 }
 
 /* container style */

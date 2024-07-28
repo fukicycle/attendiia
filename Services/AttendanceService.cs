@@ -47,8 +47,9 @@ public sealed class AttendanceService : IAttendanceService
 
     public async Task<List<Attendance>> GetAttendancesAsync()
     {
-        return await _firebaseDatabaseService.GetItemsAsync<Attendance>(
+        List<Attendance> attendances = await _firebaseDatabaseService.GetItemsAsync<Attendance>(
             FirebaseDatabaseKeys.ATTENDANCE_PATH);
+        return attendances.OrderByDescending(a => a.CreateDateTime).ToList();
     }
 
     public async Task UpdateAttendanceAsync(string id, AttendanceCreateForm attendanceFormData)
