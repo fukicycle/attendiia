@@ -2,11 +2,11 @@
 
 public sealed class GroupUser
 {
-    public GroupUser(string groupCode, string uid)
+    public GroupUser(string groupCode, string email)
     {
         GroupCode = groupCode;
-        Uid = uid;
+        Email = email;
     }
     public string GroupCode { get; }
-    public string Uid { get; }
+    public string Email { get; }
 }
