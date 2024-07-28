@@ -2,6 +2,17 @@
 @inject NavigationManager NavigationManager
 @attribute [Authorize]
 <Animate class="container" Animation="Animations.Fade">
-    <div>出欠</div>
-    <AddButton OnClick="@(() => NavigationManager.NavigateTo("create/attendance"))" />
+    <div class="wrapper">
+        <div>回答待ち</div>
+        <div class="list">
+
+        </div>
+        <div>回答済み</div>
+        <div class="list">
+
+        </div>
+        <div class="create">
+            <AddButton OnClick="@(() => NavigationManager.NavigateTo("create/attendance"))" />
+        </div>
+    </div>
 </Animate>

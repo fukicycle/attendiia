@@ -1,0 +1,15 @@
+.wrapper {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto minmax(0, 1fr) 54px;
+    height: 100%;
+}
+
+.list {
+    overflow: auto;
+}
+
+.create {
+    display: flex;
+    justify-content: flex-end;
+}
