@@ -2,6 +2,7 @@
 
 public sealed class Attendance
 {
+    // public Attendance(string title, string description, string email, string gropuCode, bool updated = false)
     public Attendance(string title, string description, string email, bool updated = false)
     {
         Id = Guid.NewGuid().ToString();
@@ -9,6 +10,7 @@ public sealed class Attendance
         Description = description;
         CreateDateTime = DateTime.Now;
         Email = email;
+        // GroupCode = gropuCode;
         IsUpdated = updated;
     }
     public string Id { get; }
@@ -16,5 +18,6 @@ public sealed class Attendance
     public string Description { get; }
     public DateTime CreateDateTime { get; }
     public string Email { get; }
+    // public string GroupCode { get; }
     public bool IsUpdated { get; }
 }
