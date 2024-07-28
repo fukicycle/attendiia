@@ -1,3 +1,44 @@
 .contents {
     overflow: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-gap: var(--pad-l);
+}
+
+.title {
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+::deep .input-area {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+    grid-gap: var(--pad-l);
+}
+
+::deep .input-area>input,
+::deep .input-area>textarea {
+    width: 100%;
+    text-align: start;
+    font-size: 16px;
+    font-family: "Noto Sans JP", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+::deep .input-area>textarea {
+    outline: none;
+    border: 1px solid var(--primary-color-500);
+    background-color: var(--white);
+    outline: none;
+    padding: 6px;
+    border-radius: var(--pad-m);
+    resize: none;
+}
+
+::deep .input-area>button {
+    margin: auto;
 }

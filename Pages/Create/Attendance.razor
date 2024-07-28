@@ -1,7 +1,22 @@
 ﻿@page "/create/attendance"
 <Animate class="container create" Animation="Animations.FadeUp">
     <div class="contents">
-        <div>新しい出欠を作成</div>
+        <div class="title">新しい出欠を作成</div>
+        <EditForm class="input-area" Model="@attendanceCreateForm">
+            <DataAnnotationsValidator />
+            <div>
+                <div>題名(20文字まで)</div>
+                <ValidationMessage For="() => attendanceCreateForm.Title" />
+            </div>
+            <InputText @bind-Value=@attendanceCreateForm.Title />
+            <div>
+                <div>説明(200文字まで)</div>
+                <ValidationMessage For="() => attendanceCreateForm.Description" />
+            </div>
+            <InputTextArea @bind-Value=@attendanceCreateForm.Description />
+            <InputText hidden @bind-Value=@attendanceCreateForm.AuthorEmail />
+            <button type="submit">作成する</button>
+        </EditForm>
     </div>
     <Return ReturnTo="" />
 </Animate>
