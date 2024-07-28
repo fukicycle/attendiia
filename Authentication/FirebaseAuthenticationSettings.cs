@@ -1,8 +1,8 @@
 namespace Attendiia.Authentication;
 
-public sealed class FirebaseSettings
+public sealed class FirebaseAuthenticationSettings
 {
-    public FirebaseSettings(string firebaseApiKey, string firebaseAuthDomain)
+    public FirebaseAuthenticationSettings(string firebaseApiKey, string firebaseAuthDomain)
     {
         FirebaseApiKey = firebaseApiKey;
         FirebaseAuthDomain = firebaseAuthDomain;

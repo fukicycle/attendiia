@@ -6,6 +6,7 @@ using Attendiia.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Attendiia.Services.Interface;
 using Attendiia.Services;
+using Firebase.Auth;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -16,7 +17,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 //configuration check
 builder.Services.AddScoped(p =>
 {
-    FirebaseSettings? firebaseSettings = p.GetRequiredService<IConfiguration>().GetSection("FirebaseSettings").Get<FirebaseSettings>();
+    FirebaseAuthenticationSettings? firebaseSettings = p.GetRequiredService<IConfiguration>().GetSection("FirebaseSettings").Get<FirebaseAuthenticationSettings>();
     if (firebaseSettings == null)
     {
         throw new ArgumentNullException("Firebase settings is null or not found. Please give us firebase settings.");
@@ -41,5 +42,6 @@ builder.Services.AddScoped<IAuthenticationService, FirebaseAuthenticationService
 builder.Services.AddHttpClient("Default", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Default"));
 builder.Services.AddScoped<IFirebaseDatabaseService, FirebaseDatabaseService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
 
 await builder.Build().RunAsync();

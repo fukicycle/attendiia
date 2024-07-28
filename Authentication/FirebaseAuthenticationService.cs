@@ -8,7 +8,7 @@ public sealed class FirebaseAuthenticationService : IAuthenticationService
     private readonly FirebaseAuthenticationStateProvider _firebaseAuthenticationStateProvider;
     private readonly FirebaseAuthConfig _authConfig;
 
-    public FirebaseAuthenticationService(FirebaseAuthenticationStateProvider firebaseAuthenticationStateProvider, FirebaseSettings firebaseSettings)
+    public FirebaseAuthenticationService(FirebaseAuthenticationStateProvider firebaseAuthenticationStateProvider, FirebaseAuthenticationSettings firebaseSettings)
     {
         _firebaseAuthenticationStateProvider = firebaseAuthenticationStateProvider;
         _authConfig = new FirebaseAuthConfig
