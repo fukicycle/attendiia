@@ -89,9 +89,12 @@ input {
 }
 
 
-/* add some item container style */
-.container.create {
+/* container style */
+.container {
     height: 100%;
+}
+
+.container.create {
     position: fixed;
     top: 56px;
     left: 0;

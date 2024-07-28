@@ -1,5 +1,7 @@
 ﻿@page "/"
 @inject NavigationManager NavigationManager
 @attribute [Authorize]
-<div>出欠</div>
-<AddButton OnClick="@(() => NavigationManager.NavigateTo("create/attendance"))" />
+<Animate class="container" Animation="Animations.Fade">
+    <div>出欠</div>
+    <AddButton OnClick="@(() => NavigationManager.NavigateTo("create/attendance"))" />
+</Animate>
