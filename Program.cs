@@ -43,5 +43,6 @@ builder.Services.AddHttpClient("Default", client => client.BaseAddress = new Uri
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Default"));
 builder.Services.AddScoped<IFirebaseDatabaseService, FirebaseDatabaseService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 
 await builder.Build().RunAsync();

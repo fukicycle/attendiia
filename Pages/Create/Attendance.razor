@@ -1,21 +1,24 @@
 ﻿@page "/create/attendance"
+@inject IAttendanceService AttendanceService
+@inject NavigationManager NavigationManager
+@attribute [Authorize]
 <Animate class="container create" Animation="Animations.FadeUp">
     <div class="contents">
         <div class="title">新しい出欠を作成</div>
-        <EditForm class="input-area" Model="@attendanceCreateForm">
+        <EditForm class="input-area" Model="@attendanceCreateForm" OnValidSubmit="OnValidRequest">
             <DataAnnotationsValidator />
             <div>
                 <div>題名(20文字まで)</div>
                 <ValidationMessage For="() => attendanceCreateForm.Title" />
             </div>
-            <InputText @bind-Value=@attendanceCreateForm.Title />
+            <InputText disabled=@isSending @bind-Value=@attendanceCreateForm.Title />
             <div>
                 <div>説明(200文字まで)</div>
                 <ValidationMessage For="() => attendanceCreateForm.Description" />
             </div>
-            <InputTextArea @bind-Value=@attendanceCreateForm.Description />
+            <InputTextArea disabled=@isSending @bind-Value=@attendanceCreateForm.Description />
             <InputText hidden @bind-Value=@attendanceCreateForm.AuthorEmail />
-            <button type="submit">作成する</button>
+            <button disabled=@isSending type="submit">作成する</button>
         </EditForm>
     </div>
     <Return ReturnTo="" />
