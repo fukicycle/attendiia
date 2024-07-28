@@ -1,15 +1,29 @@
 ﻿@page "/"
 @inject NavigationManager NavigationManager
+@inject IAttendanceService AttendanceService
 @attribute [Authorize]
 <Animate class="container" Animation="Animations.Fade">
     <div class="wrapper">
-        <div>回答待ち</div>
+        <div>回答待ち(@attendances.Count)</div>
         <div class="list">
-
+            @if (isLoading)
+            {
+                <Loader />
+            }
+            else
+            {
+                @foreach (var attendance in attendances)
+                {
+                    <div class="list-item active">
+                        <div class="create-info">@attendance.CreateDateTime.ToString("yyyy-MM-dd")に作成されました</div>
+                        <div class="title">@attendance.Title</div>
+                        <div class="description">@attendance.Description</div>
+                    </div>
+                }
+            }
         </div>
         <div>回答済み</div>
         <div class="list">
-
         </div>
         <div class="create">
             <AddButton OnClick="@(() => NavigationManager.NavigateTo("create/attendance"))" />

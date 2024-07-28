@@ -7,14 +7,14 @@ public sealed class Attendance
         Id = Guid.NewGuid().ToString();
         Title = title;
         Description = description;
-        CerateDateTime = DateTime.Now;
+        CreateDateTime = DateTime.Now;
         Email = email;
         IsUpdated = updated;
     }
     public string Id { get; }
     public string Title { get; }
     public string Description { get; }
-    public DateTime CerateDateTime { get; }
+    public DateTime CreateDateTime { get; }
     public string Email { get; }
     public bool IsUpdated { get; }
 }
