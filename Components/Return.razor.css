@@ -1,0 +1,11 @@
+.return {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: var(--pad-m);
+    font-size: 12px;
+    width: 64px;
+    height: 40px;
+    color: var(--primary-color-500);
+}
