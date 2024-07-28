@@ -87,3 +87,20 @@ input {
     border-radius: 0;
     border-bottom: 1px solid var(--primary-color-500);
 }
+
+
+/* add some item container style */
+.container.create {
+    height: 100%;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    padding: var(--pad-m);
+    background-color: var(--white);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    padding-bottom: calc(60px + env(safe-area-inset-bottom));
+}

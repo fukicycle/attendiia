@@ -7,6 +7,6 @@
 }
 
 .center {
-    overflow: auto;
+    overflow: hidden;
     padding: var(--pad-m);
 }
