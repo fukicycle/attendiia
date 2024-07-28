@@ -25,7 +25,7 @@ public sealed class FirebaseDatabaseService : IFirebaseDatabaseService
 
     public async Task<T?> GetItemAsync<T>(string path, string key)
     {
-        return await _firebaseClient.Child($"{path}/{key}").OnceSingleAsync<T>();
+        return await _firebaseClient.Child(path).Child(key).OnceSingleAsync<T>();
     }
 
     public async Task<List<T>> GetItemsAsync<T>(string path)
