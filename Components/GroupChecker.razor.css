@@ -1,0 +1,14 @@
+.group-loading {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.group-loader-wrapper {
+    height: 60px;
+    width: 60px;
+    position: relative;
+}

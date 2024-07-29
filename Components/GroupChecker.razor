@@ -1,0 +1,20 @@
+﻿@inject IGroupService GroupService
+@inject UserGroupContainer UserGroupContainer
+@if (isLoading)
+{
+    <div class="group-loading">
+    <div class="group-loader-wrapper">
+        <Loader />
+    </div>
+    <div>グループの情報を読み込んでいます</div>
+</div>
+}
+else
+{
+    @ChildContent
+    if (isNew)
+    {
+        //find new group!
+        <RedirectToFindGroup />
+    }
+}

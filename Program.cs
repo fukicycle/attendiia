@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Attendiia.Services.Interface;
 using Attendiia.Services;
 using Firebase.Auth;
+using Attendiia.Stores;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -44,5 +45,6 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 builder.Services.AddScoped<IFirebaseDatabaseService, FirebaseDatabaseService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+builder.Services.AddScoped<UserGroupContainer>();
 
 await builder.Build().RunAsync();
