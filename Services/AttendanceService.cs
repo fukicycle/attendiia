@@ -7,9 +7,11 @@ namespace Attendiia.Services;
 public sealed class AttendanceService : IAttendanceService
 {
     private readonly IFirebaseDatabaseService _firebaseDatabaseService;
-    public AttendanceService(IFirebaseDatabaseService firebaseDatabaseService)
+    private readonly ILogger<AttendanceService> _logger;
+    public AttendanceService(IFirebaseDatabaseService firebaseDatabaseService, ILogger<AttendanceService> logger)
     {
         _firebaseDatabaseService = firebaseDatabaseService;
+        _logger = logger;
     }
 
     public async Task<string> CreateAttendanceAsync(AttendanceCreateForm attendanceFormData)
@@ -40,9 +42,9 @@ public sealed class AttendanceService : IAttendanceService
             FirebaseDatabaseKeys.ATTENDANCE_PATH, id);
     }
 
-    public async Task<Attendance?> GetAttendanceByIdAsync(string id)
+    public async Task<Attendance> GetAttendanceByIdAsync(string id)
     {
-        return await _firebaseDatabaseService.GetItemAsync<Attendance?>(
+        return await _firebaseDatabaseService.GetItemAsync<Attendance>(
             FirebaseDatabaseKeys.ATTENDANCE_PATH, id);
     }
 
@@ -74,7 +76,15 @@ public sealed class AttendanceService : IAttendanceService
 
     private async Task<bool> IsExistsAsync(string id)
     {
-        Attendance? attendance = await GetAttendanceByIdAsync(id);
-        return attendance != null;
+        try
+        {
+            await GetAttendanceByIdAsync(id);
+            return true;
+        }
+        catch (NotSupportedException e)
+        {
+            _logger.LogError(e.Message);
+            return false;
+        }
     }
 }

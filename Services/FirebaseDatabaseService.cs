@@ -23,9 +23,14 @@ public sealed class FirebaseDatabaseService : IFirebaseDatabaseService
         await _firebaseClient.Child(path).Child(key).DeleteAsync();
     }
 
-    public async Task<T?> GetItemAsync<T>(string path, string key)
+    public async Task<T> GetItemAsync<T>(string path, string key)
     {
-        return await _firebaseClient.Child(path).Child(key).OnceSingleAsync<T>();
+        T? item = await _firebaseClient.Child(path).Child(key).OnceSingleAsync<T>();
+        if (item == null)
+        {
+            throw new NotSupportedException($"No such item. Path={path},Key={key}");
+        }
+        return item;
     }
 
     public async Task<List<T>> GetItemsAsync<T>(string path)

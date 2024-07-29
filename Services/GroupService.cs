@@ -7,9 +7,11 @@ namespace Attendiia.Services;
 public sealed class GroupService : IGroupService
 {
     private readonly IFirebaseDatabaseService _firebaseaDatabaseService;
-    public GroupService(IFirebaseDatabaseService firebaseDatabaseService)
+    private readonly ILogger<GroupService> _logger;
+    public GroupService(IFirebaseDatabaseService firebaseDatabaseService, ILogger<GroupService> logger)
     {
         _firebaseaDatabaseService = firebaseDatabaseService;
+        _logger = logger;
     }
 
     public async Task<string> CreateGroupAsync(string groupName)
@@ -50,9 +52,9 @@ public sealed class GroupService : IGroupService
         return sb.ToString();
     }
 
-    public async Task<Group?> GetGroupByCodeAsync(string groupCode)
+    public async Task<Group> GetGroupByCodeAsync(string groupCode)
     {
-        return await _firebaseaDatabaseService.GetItemAsync<Group?>(FirebaseDatabaseKeys.GROUP_PATH, groupCode);
+        return await _firebaseaDatabaseService.GetItemAsync<Group>(FirebaseDatabaseKeys.GROUP_PATH, groupCode);
     }
 
     public async Task<List<Group>> GetGroupsAsync()
@@ -71,7 +73,15 @@ public sealed class GroupService : IGroupService
 
     private async Task<bool> IsExistsAsync(string code)
     {
-        Group? group = await GetGroupByCodeAsync(code);
-        return group != null;
+        try
+        {
+            await GetGroupByCodeAsync(code);
+            return true;
+        }
+        catch (NotSupportedException e)
+        {
+            _logger.LogError(e.Message);
+            return false;
+        }
     }
 }

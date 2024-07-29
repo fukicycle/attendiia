@@ -56,7 +56,7 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
 
         //get and set groups of authorized user.
         _userGroupContainer.Groups.Clear();
-        _userGroupContainer.Groups.AddRange(await _groupService.GetGroupsByEmailAsync(loginUserInfo.Email));
+        _userGroupContainer.Groups.AddRange(await GetGroupsByEmailAsync(loginUserInfo.Email));
 
         //if contains groups, add claims.
         if (_userGroupContainer.Groups.Any())
@@ -87,12 +87,21 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 
-    private async Task<IEnumerable<Group>> GetGroupsByEmailAsync(string email)
+    private async Task<List<Group>> GetGroupsByEmailAsync(string email)
     {
-        List<GroupUser> groupUsers = await _groupUserService.GetGroupUsersByEmailAsync(email);
-        foreach (var groupUser in groupUsers)
+        List<Group> groups = new List<Group>();
+        try
         {
-            yield return await _groupService.GetGroupByCodeAsync(groupUser.GroupCode);
+            List<GroupUser> groupUsers = await _groupUserService.GetGroupUsersByEmailAsync(email);
+            foreach (var groupUser in groupUsers)
+            {
+                groups.Add(await _groupService.GetGroupByCodeAsync(groupUser.GroupCode));
+            }
         }
+        catch (NotSupportedException e)
+        {
+            //TODO():error handling {e}
+        }
+        return groups;
     }
 }
