@@ -45,6 +45,7 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 builder.Services.AddScoped<IFirebaseDatabaseService, FirebaseDatabaseService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+builder.Services.AddScoped<IClaimService, ClaimService>();
 builder.Services.AddScoped<UserGroupContainer>();
 
 await builder.Build().RunAsync();
