@@ -12,6 +12,19 @@
   align-items: center;
 }
 
+.fullscreen-loader-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 200;
+  background-color: var(--white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* HTML: <div class="loader"></div> */
 .loader {
   width: 50px;

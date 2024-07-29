@@ -13,12 +13,15 @@
             {
                 NavigationManager.NavigateTo("find");
             }
+            else
+            {
+                //if not met any condition, go back home.
+                NavigationManager.NavigateTo("", true);
+            }
         }
         else
         {
             NavigationManager.NavigateTo("sign-in");
         }
-        //if not met any condition, go back home.
-        NavigationManager.NavigateTo("", true);
     }
 }
