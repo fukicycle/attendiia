@@ -1,0 +1,24 @@
+﻿@inject NavigationManager NavigationManager
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authenticationState = await AuthenticationState;
+        if (authenticationState.User.Identity?.IsAuthenticated == true)
+        {
+            Claim? claim = authenticationState.User.Claims.SingleOrDefault(a => a.Type == ClaimTypes.UserData);
+            if (claim == default)
+            {
+                NavigationManager.NavigateTo("find");
+            }
+        }
+        else
+        {
+            NavigationManager.NavigateTo("sign-in");
+        }
+        //if not met any condition, go back home.
+        NavigationManager.NavigateTo("", true);
+    }
+}

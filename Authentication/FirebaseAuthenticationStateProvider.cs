@@ -2,6 +2,9 @@ using System.Security.Claims;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Headers;
+using Attendiia.Services.Interface;
+using Attendiia.Stores;
+using Newtonsoft.Json;
 
 namespace Attendiia.Authentication;
 
@@ -9,11 +12,19 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
 {
     private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorageService;
+    private readonly IGroupService _groupService;
+    private readonly UserGroupContainer _userGroupContainer;
 
-    public FirebaseAuthenticationStateProvider(HttpClient httpClient, ILocalStorageService localStorageService)
+    public FirebaseAuthenticationStateProvider(
+        HttpClient httpClient,
+        ILocalStorageService localStorageService,
+        IGroupService groupService,
+        UserGroupContainer userGroupContainer)
     {
         _httpClient = httpClient;
         _localStorageService = localStorageService;
+        _groupService = groupService;
+        _userGroupContainer = userGroupContainer;
     }
 
 
@@ -33,14 +44,24 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
 
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", accessToken);
 
+        List<Claim> claims =
+        [
+            new Claim(ClaimTypes.Email, loginUserInfo.Email),
+            new Claim(ClaimTypes.Name,loginUserInfo.DisplayName ?? loginUserInfo.Email),
+        ];
+
+        //get and set groups of authorized user.
+        _userGroupContainer.Groups.Clear();
+        _userGroupContainer.Groups.AddRange(await _groupService.GetGroupsByEmailAsync(loginUserInfo.Email));
+
+        //if contains groups, add claims.
+        if (_userGroupContainer.Groups.Any())
+        {
+            claims.Add(new Claim(ClaimTypes.UserData, JsonConvert.SerializeObject(_userGroupContainer.Groups)));
+        }
+
         return new AuthenticationState(
-            new ClaimsPrincipal(
-                new ClaimsIdentity(
-                    new Claim[]{
-                        new Claim(ClaimTypes.Name,loginUserInfo.Email)
-                    }, "apiAuth"
-                )
-            )
+            new ClaimsPrincipal(new ClaimsIdentity(claims, "apiAuth"))
         );
     }
 

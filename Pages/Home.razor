@@ -1,7 +1,7 @@
 ﻿@page "/"
 @inject NavigationManager NavigationManager
 @inject IAttendanceService AttendanceService
-@attribute [Authorize]
+@attribute [Authorize(Policy = AuthorizePolicy.REQUIRE_GROUP)]
 <Animate class="container" Animation="Animations.Fade">
     <div class="wrapper">
         <div>回答待ち(@attendances.Count)</div>

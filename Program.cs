@@ -8,6 +8,7 @@ using Attendiia.Services.Interface;
 using Attendiia.Services;
 using Firebase.Auth;
 using Attendiia.Stores;
+using System.Security.Claims;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -34,7 +35,18 @@ builder.Services.AddScoped(p =>
     return firebaseSettings;
 });
 builder.Services.AddOptions();
-builder.Services.AddAuthorizationCore();
+builder.Services.AddAuthorizationCore(options =>
+{
+    options.AddPolicy(AuthorizePolicy.DEFAULT, policy =>
+    {
+        policy.RequireClaim(ClaimTypes.Email);
+    });
+    options.AddPolicy(AuthorizePolicy.REQUIRE_GROUP, policy =>
+    {
+        policy.RequireClaim(ClaimTypes.Email);
+        policy.RequireClaim(ClaimTypes.UserData);
+    });
+});
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<FirebaseAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(
@@ -45,7 +57,6 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 builder.Services.AddScoped<IFirebaseDatabaseService, FirebaseDatabaseService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
-builder.Services.AddScoped<IClaimService, ClaimService>();
 builder.Services.AddScoped<UserGroupContainer>();
 
 await builder.Build().RunAsync();
