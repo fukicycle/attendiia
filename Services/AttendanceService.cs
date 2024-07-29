@@ -15,6 +15,7 @@ public sealed class AttendanceService : IAttendanceService
     public async Task<string> CreateAttendanceAsync(AttendanceCreateForm attendanceFormData)
     {
         Attendance attendance = new Attendance(
+            Guid.NewGuid().ToString(),
             attendanceFormData.Title,
             attendanceFormData.Description,
             attendanceFormData.AuthorEmail);
@@ -60,6 +61,7 @@ public sealed class AttendanceService : IAttendanceService
         }
         //更新すると確認済みを解除したいため新規で追加する。
         Attendance attendance = new Attendance(
+            id,
             attendanceFormData.Title,
             attendanceFormData.Description,
             attendanceFormData.AuthorEmail,

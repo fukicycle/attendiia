@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using Attendiia.Services.Interface;
 using Attendiia.Stores;
 using Newtonsoft.Json;
+using Attendiia.Models;
 
 namespace Attendiia.Authentication;
 
@@ -13,17 +14,20 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
     private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorageService;
     private readonly IGroupService _groupService;
+    private readonly IGroupUserService _groupUserService;
     private readonly UserGroupContainer _userGroupContainer;
 
     public FirebaseAuthenticationStateProvider(
         HttpClient httpClient,
         ILocalStorageService localStorageService,
         IGroupService groupService,
+        IGroupUserService groupUserService,
         UserGroupContainer userGroupContainer)
     {
         _httpClient = httpClient;
         _localStorageService = localStorageService;
         _groupService = groupService;
+        _groupUserService = groupUserService;
         _userGroupContainer = userGroupContainer;
     }
 
@@ -81,5 +85,14 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
             _httpClient.DefaultRequestHeaders.Authorization = null;
         }
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+    }
+
+    private async Task<IEnumerable<Group>> GetGroupsByEmailAsync(string email)
+    {
+        List<GroupUser> groupUsers = await _groupUserService.GetGroupUsersByEmailAsync(email);
+        foreach (var groupUser in groupUsers)
+        {
+            yield return await _groupService.GetGroupByCodeAsync(groupUser.GroupCode);
+        }
     }
 }

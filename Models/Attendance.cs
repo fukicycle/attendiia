@@ -3,9 +3,9 @@
 public sealed class Attendance
 {
     // public Attendance(string title, string description, string email, string gropuCode, bool updated = false)
-    public Attendance(string title, string description, string email, bool updated = false)
+    public Attendance(string id, string title, string description, string email, bool updated = false)
     {
-        Id = Guid.NewGuid().ToString();
+        Id = id;
         Title = title;
         Description = description;
         CreateDateTime = DateTime.Now;

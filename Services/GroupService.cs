@@ -60,22 +60,6 @@ public sealed class GroupService : IGroupService
         return await _firebaseaDatabaseService.GetItemsAsync<Group>(FirebaseDatabaseKeys.GROUP_PATH);
     }
 
-    public async Task<List<Group>> GetGroupsByEmailAsync(string email)
-    {
-        List<Group> groups = new List<Group>();
-        List<GroupUser> groupUsers = await _firebaseaDatabaseService.GetItemsAsync<GroupUser>(FirebaseDatabaseKeys.GROUP_USER_PATH);
-        foreach (var groupUser in groupUsers)
-        {
-            Group? group = await _firebaseaDatabaseService.GetItemAsync<Group>(FirebaseDatabaseKeys.GROUP_PATH, groupUser.GroupCode);
-            if (group == null)
-            {
-                throw new ArgumentNullException($"{nameof(group)} is null.");
-            }
-            groups.Add(group);
-        }
-        return groups;
-    }
-
     public async Task UpdateGroupAsync(string groupCode, Group group)
     {
         if (!await IsExistsAsync(groupCode))

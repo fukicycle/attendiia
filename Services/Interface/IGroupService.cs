@@ -7,7 +7,6 @@ public interface IGroupService
     Task<string> CreateGroupAsync(string groupName);
     Task<List<Group>> GetGroupsAsync();
     Task<Group?> GetGroupByCodeAsync(string groupCode);
-    Task<List<Group>> GetGroupsByEmailAsync(string email);
     Task UpdateGroupAsync(string groupCode, Group group);
     Task DeleteGroupAsync(string groupCode);
 }
