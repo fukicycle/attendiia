@@ -51,7 +51,7 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
         List<Claim> claims =
         [
             new Claim(ClaimTypes.Email, loginUserInfo.Email),
-            new Claim(ClaimTypes.Name,loginUserInfo.DisplayName ?? loginUserInfo.Email),
+            new Claim(ClaimTypes.Name,loginUserInfo.DisplayName),
         ];
 
         //get and set groups of authorized user.

@@ -2,22 +2,15 @@ namespace Attendiia.Authentication;
 
 public sealed class LoginUserInfo
 {
-    public LoginUserInfo(string? firstName, string? lastName, string? displayName, string email, string? photoUrl)
+    public LoginUserInfo(string uid, string email, string displayName)
     {
-        FirstName = firstName;
-        LastName = lastName;
-        DisplayName = displayName;
+        Uid = uid;
         Email = email;
-        PhotoUrl = photoUrl;
+        DisplayName = displayName;
     }
 
-    public string? FirstName { get; }
-
-    public string? LastName { get; }
-
-    public string? DisplayName { get; }
-
+    public string Uid { get; }
     public string Email { get; }
+    public string DisplayName { get; }
 
-    public string? PhotoUrl { get; }
 }

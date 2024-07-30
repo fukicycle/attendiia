@@ -1,30 +1,36 @@
 ﻿@page "/register"
+@inject IUserService UserService
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
 <div class="fullscreen">
-    <div class="register-form">
+    <EditForm OnValidSubmit="@OnValidRequest" class="register-form" Model="@userCreateForm">
+        <DataAnnotationsValidator />
+        @if (isLoading)
+        {
+            <Loader Message="アカウントを作成しています"/>
+        }
         <div>
             <div class="title">新規アカウント作成</div>
             <div class="description">*のついている項目は必須です</div>
         </div>
         <div class="input-group">
             <div class="input-form">
-                <input type="email" placeholder="メールアドレス*" />
+                <InputText @bind-Value="@userCreateForm.Email" type="email" placeholder="メールアドレス*" />
+                <ValidationMessage For="@(() => userCreateForm.Email)" />
             </div>
             <div class="input-form">
-                <input type="text" placeholder="表示名*" />
+                <InputText @bind-Value="@userCreateForm.DisplayName" type="text" placeholder="表示名*" />
+                <ValidationMessage For="@(() => userCreateForm.DisplayName)" />
             </div>
             <div class="input-form">
-                <input type="text" placeholder="姓" />
+                <InputText @bind-Value="@userCreateForm.Password" type="password" placeholder="パスワード*" />
+                <ValidationMessage For="@(() => userCreateForm.Password)" />
             </div>
             <div class="input-form">
-                <input type="text" placeholder="名" />
-            </div>
-            <div class="input-form">
-                <input type="password" placeholder="パスワード*" />
-            </div>
-            <div class="input-form">
-                <input type="password" placeholder="パスワードの確認*" />
+                <InputText @bind-Value="@userCreateForm.RePassword" type="password" placeholder="パスワードの確認*" />
+                <ValidationMessage For="@(() => userCreateForm.RePassword)" />
             </div>
         </div>
-        <button>作成する</button>
-    </div>
+        <button type="submit">作成する</button>
+    </EditForm>
 </div>

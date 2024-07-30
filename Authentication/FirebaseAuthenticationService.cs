@@ -32,11 +32,9 @@ public sealed class FirebaseAuthenticationService : IAuthenticationService
                 await client.SignInWithEmailAndPasswordAsync(loginModel.UserId, loginModel.Password);
             string idToken = await userCredential.User.GetIdTokenAsync();
             LoginUserInfo loginUserInfo = new LoginUserInfo(
-                userCredential.User.Info.FirstName,
-                userCredential.User.Info.LastName,
-                userCredential.User.Info.DisplayName,
+                userCredential.User.Uid,
                 userCredential.User.Info.Email,
-                userCredential.User.Info.PhotoUrl
+                userCredential.User.Info.DisplayName
             );
             await _firebaseAuthenticationStateProvider.NotifySignIn(loginUserInfo, idToken);
             return true;
