@@ -61,14 +61,15 @@ public sealed class AttendanceService : IAttendanceService
         {
             throw new ArgumentException($"{nameof(id)} is not found.");
         }
+        string newId = Guid.NewGuid().ToString();
         //更新すると確認済みを解除したいため新規で追加する。
         Attendance attendance = new Attendance(
-            id,
+            newId,
             attendanceFormData.Title,
             attendanceFormData.Description,
             attendanceFormData.AuthorEmail,
             true);//更新フラグ
-        await _firebaseDatabaseService.UpdateItemAsync(
+        await _firebaseDatabaseService.AddItemAsync(
             FirebaseDatabaseKeys.ATTENDANCE_PATH, attendance.Id, attendance);
         //古い情報は削除する。
         await DeleteAttendanceAsync(id);
