@@ -2,11 +2,11 @@ namespace Attendiia.Authentication;
 
 public sealed class LoginModel
 {
-    public LoginModel(string userId, string password)
+    public LoginModel(string email, string password)
     {
-        UserId = userId;
+        Email = email;
         Password = password;
     }
-    public string UserId { get; }
+    public string Email { get; }
     public string Password { get; }
 }

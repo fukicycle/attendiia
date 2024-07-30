@@ -29,7 +29,7 @@ public sealed class FirebaseAuthenticationService : IAuthenticationService
             FirebaseAuthProvider provider = new EmailProvider();
             FirebaseAuthClient client = new FirebaseAuthClient(_authConfig);
             UserCredential userCredential =
-                await client.SignInWithEmailAndPasswordAsync(loginModel.UserId, loginModel.Password);
+                await client.SignInWithEmailAndPasswordAsync(loginModel.Email, loginModel.Password);
             string idToken = await userCredential.User.GetIdTokenAsync();
             LoginUserInfo loginUserInfo = new LoginUserInfo(
                 userCredential.User.Uid,
