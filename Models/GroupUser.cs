@@ -2,14 +2,14 @@
 
 public sealed class GroupUser
 {
-    public GroupUser(string id, string groupCode, string email)
+    public GroupUser(string id, string groupCode, string uid)
     {
         Id = id;
         GroupCode = groupCode;
-        Email = email;
+        Uid = uid;
     }
     public string Id { get; }
     public string GroupCode { get; }
-    public string Email { get; }
+    public string Uid { get; }
     public bool IsCurrent { get; set; }
 }

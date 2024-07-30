@@ -36,9 +36,9 @@ public sealed class GroupUserService : IGroupUserService
             FirebaseDatabaseKeys.GROUP_USER_PATH, id);
     }
 
-    public async Task<GroupUser?> GetGroupUserIsCurrentAsync(string email)
+    public async Task<GroupUser?> GetGroupUserIsCurrentAsync(string uid)
     {
-        List<GroupUser> groupUsers = await GetGroupUsersByEmailAsync(email);
+        List<GroupUser> groupUsers = await GetGroupUsersByUidAsync(uid);
         return groupUsers.SingleOrDefault(a => a.IsCurrent);
     }
 
@@ -48,10 +48,10 @@ public sealed class GroupUserService : IGroupUserService
             FirebaseDatabaseKeys.GROUP_USER_PATH);
     }
 
-    public async Task<List<GroupUser>> GetGroupUsersByEmailAsync(string email)
+    public async Task<List<GroupUser>> GetGroupUsersByUidAsync(string uid)
     {
         List<GroupUser> groupUsers = await GetGroupUsersAsync();
-        return groupUsers.Where(a => a.Email == email).ToList();
+        return groupUsers.Where(a => a.Uid == uid).ToList();
     }
 
     public async Task UpdateGroupAsync(string id, GroupUser groupUser)
@@ -64,6 +64,6 @@ public sealed class GroupUserService : IGroupUserService
     private async Task<bool> IsExistsAsync(GroupUser groupUser)
     {
         List<GroupUser> groupUsers = await GetGroupUsersAsync();
-        return groupUsers.Any(a => a.Email == groupUser.Email && a.GroupCode == groupUser.GroupCode);
+        return groupUsers.Any(a => a.Uid == groupUser.Uid && a.GroupCode == groupUser.GroupCode);
     }
 }

@@ -39,11 +39,11 @@ builder.Services.AddAuthorizationCore(options =>
 {
     options.AddPolicy(AuthorizePolicy.DEFAULT, policy =>
     {
-        policy.RequireClaim(ClaimTypes.Email);
+        policy.RequireClaim(ClaimTypes.NameIdentifier);
     });
     options.AddPolicy(AuthorizePolicy.REQUIRE_GROUP, policy =>
     {
-        policy.RequireClaim(ClaimTypes.Email);
+        policy.RequireClaim(ClaimTypes.NameIdentifier);
         policy.RequireClaim(ClaimTypes.UserData);
     });
 });

@@ -33,7 +33,7 @@ public sealed class UserService : IUserService
         _logger = logger;
         _localStorageService = localStorageService;
     }
-    public async Task<LoginUserInfo> GetUserInfoAsync(string email)
+    public async Task<LoginUserInfo> GetUserInfoAsync()
     {
         LoginUserInfo? loginUserInfo = await _localStorageService.GetItemAsync<LoginUserInfo>(LocalStorageKey.USER_INFO);
         if (loginUserInfo == null)

@@ -53,14 +53,14 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
 
         List<Claim> claims =
         [
-            new Claim(ClaimTypes.Email, loginUserInfo.Email),
+            new Claim(ClaimTypes.NameIdentifier, loginUserInfo.Uid),
             new Claim(ClaimTypes.Name,loginUserInfo.DisplayName),
         ];
 
         //get and set groups of authorized user.
         _userGroupContainer.Groups.Clear();
-        _userGroupContainer.Groups.AddRange(await GetGroupsByEmailAsync(loginUserInfo.Email));
-        GroupUser? groupUser = await _groupUserService.GetGroupUserIsCurrentAsync(loginUserInfo.Email);
+        _userGroupContainer.Groups.AddRange(await GetGroupsByEmailAsync(loginUserInfo.Uid));
+        GroupUser? groupUser = await _groupUserService.GetGroupUserIsCurrentAsync(loginUserInfo.Uid);
         //if contains groups, add claims.
         if (groupUser != default)
         {
@@ -91,12 +91,12 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 
-    private async Task<List<Group>> GetGroupsByEmailAsync(string email)
+    private async Task<List<Group>> GetGroupsByEmailAsync(string uid)
     {
         List<Group> groups = new List<Group>();
         try
         {
-            List<GroupUser> groupUsers = await _groupUserService.GetGroupUsersByEmailAsync(email);
+            List<GroupUser> groupUsers = await _groupUserService.GetGroupUsersByUidAsync(uid);
             foreach (var groupUser in groupUsers)
             {
                 groups.Add(await _groupService.GetGroupByCodeAsync(groupUser.GroupCode));
