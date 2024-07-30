@@ -11,4 +11,5 @@ public sealed class GroupUser
     public string Id { get; }
     public string GroupCode { get; }
     public string Email { get; }
+    public bool IsCurrent { get; set; }
 }

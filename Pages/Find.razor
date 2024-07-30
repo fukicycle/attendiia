@@ -1,5 +1,33 @@
 ﻿@page "/find"
 @attribute [Authorize(Policy = AuthorizePolicy.DEFAULT)]
+@inject UserGroupContainer UserGroupContainer
 <Animate class="container create" Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.5)">
-    <div>所属グループを探す</div>
+    <div class="wrapper">
+        @if (UserGroupContainer.Groups.Any())
+        {
+            <section>
+                <div class="header">所属グループを選択する</div>
+                <div class="group-list">
+                    @foreach (var group in UserGroupContainer.Groups)
+                    {
+                        <div class="list-item">
+                            <div>@group.GroupCode</div>
+                            <div>@group.Name</div>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+        <section>
+            <div class="header">共有コードを使ってグループに所属する</div>
+            <div>共有されたグループコードを入力してください。</div>
+            <input type="text" placeholder="グループコード" />
+            <button>適用</button>
+        </section>
+        <section>
+            <div class="header">グループを新規作成する</div>
+            <input type="text" placeholder="グループ名" />
+            <button>作成</button>
+        </section>
+    </div>
 </Animate>

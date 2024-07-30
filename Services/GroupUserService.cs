@@ -36,6 +36,12 @@ public sealed class GroupUserService : IGroupUserService
             FirebaseDatabaseKeys.GROUP_USER_PATH, id);
     }
 
+    public async Task<GroupUser?> GetGroupUserIsCurrentAsync(string email)
+    {
+        List<GroupUser> groupUsers = await GetGroupUsersByEmailAsync(email);
+        return groupUsers.SingleOrDefault(a => a.IsCurrent);
+    }
+
     public async Task<List<GroupUser>> GetGroupUsersAsync()
     {
         return await _firebaseDatabaseService.GetItemsAsync<GroupUser>(

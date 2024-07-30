@@ -16,19 +16,22 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
     private readonly IGroupService _groupService;
     private readonly IGroupUserService _groupUserService;
     private readonly UserGroupContainer _userGroupContainer;
+    private readonly ILogger<FirebaseAuthenticationStateProvider> _logger;
 
     public FirebaseAuthenticationStateProvider(
         HttpClient httpClient,
         ILocalStorageService localStorageService,
         IGroupService groupService,
         IGroupUserService groupUserService,
-        UserGroupContainer userGroupContainer)
+        UserGroupContainer userGroupContainer,
+        ILogger<FirebaseAuthenticationStateProvider> logger)
     {
         _httpClient = httpClient;
         _localStorageService = localStorageService;
         _groupService = groupService;
         _groupUserService = groupUserService;
         _userGroupContainer = userGroupContainer;
+        _logger = logger;
     }
 
 
@@ -57,11 +60,12 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
         //get and set groups of authorized user.
         _userGroupContainer.Groups.Clear();
         _userGroupContainer.Groups.AddRange(await GetGroupsByEmailAsync(loginUserInfo.Email));
-
+        GroupUser? groupUser = await _groupUserService.GetGroupUserIsCurrentAsync(loginUserInfo.Email);
         //if contains groups, add claims.
-        if (_userGroupContainer.Groups.Any())
+        if (groupUser != default)
         {
-            claims.Add(new Claim(ClaimTypes.UserData, JsonConvert.SerializeObject(_userGroupContainer.Groups)));
+            _userGroupContainer.CurrentGroupCode = groupUser.GroupCode;
+            claims.Add(new Claim(ClaimTypes.UserData, _userGroupContainer.CurrentGroupCode));
         }
 
         return new AuthenticationState(
@@ -101,6 +105,7 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
         catch (NotSupportedException e)
         {
             //TODO():error handling {e}
+            _logger.LogError(e.Message);
         }
         return groups;
     }
