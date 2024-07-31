@@ -8,6 +8,7 @@ public sealed class GroupService : IGroupService
 {
     private readonly IFirebaseDatabaseService _firebaseaDatabaseService;
     private readonly ILogger<GroupService> _logger;
+    private const int GROUP_CODE_LENGTH = 12;
     public GroupService(IFirebaseDatabaseService firebaseDatabaseService, ILogger<GroupService> logger)
     {
         _firebaseaDatabaseService = firebaseDatabaseService;
@@ -44,8 +45,8 @@ public sealed class GroupService : IGroupService
 
     public string GenerateCode()
     {
-        StringBuilder sb = new StringBuilder(6);
-        for (int i = 0; i < sb.Capacity; i++)
+        StringBuilder sb = new StringBuilder(GROUP_CODE_LENGTH);
+        for (int i = 0; i < GROUP_CODE_LENGTH; i++)
         {
             sb.Append(Convert.ToChar(Random.Shared.Next(65, 65 + 26)));
         }
