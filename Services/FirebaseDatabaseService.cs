@@ -39,6 +39,12 @@ public sealed class FirebaseDatabaseService : IFirebaseDatabaseService
         return result.Select(a => a.Object).ToList();
     }
 
+    public async Task<List<T>> GetItemsAsync<T>(string path, string targetProperty, string equalsValue)
+    {
+        IReadOnlyCollection<FirebaseObject<T>> result = await _firebaseClient.Child(path).OrderBy(targetProperty).EqualTo(equalsValue).OnceAsync<T>();
+        return result.Select(a => a.Object).ToList();
+    }
+
     public async Task UpdateItemAsync<T>(string path, string key, T newItem)
     {
         await _firebaseClient.Child(path).Child(key).PutAsync(newItem);

@@ -50,10 +50,10 @@ public sealed class AttendanceService : IAttendanceService
             FirebaseDatabaseKeys.ATTENDANCE_PATH, id);
     }
 
-    public async Task<List<Attendance>> GetAttendancesAsync()
+    public async Task<List<Attendance>> GetAttendancesByGroupCodeAsync(string groupCode)
     {
         List<Attendance> attendances = await _firebaseDatabaseService.GetItemsAsync<Attendance>(
-            FirebaseDatabaseKeys.ATTENDANCE_PATH);
+            FirebaseDatabaseKeys.ATTENDANCE_PATH, "GroupCode", groupCode);
         return attendances.OrderByDescending(a => a.CreateDateTime).ToList();
     }
 
