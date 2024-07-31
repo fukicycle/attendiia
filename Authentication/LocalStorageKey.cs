@@ -6,4 +6,5 @@ public static class LocalStorageKey
     public const string ID_TOKEN = $"{APP_ID}_id_token";
     public const string REFRESH_TOKEN = $"{APP_ID}_refresh_token";
     public const string USER_INFO = $"{APP_ID}_user_info";
+    public const string EXPIRES_DATE_TIME = $"{APP_ID}_expires_datetime";
 }

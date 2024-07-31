@@ -41,38 +41,34 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        string? accessToken =
+        string? idToken =
             await _localStorageService.GetItemAsync<string>(LocalStorageKey.ID_TOKEN);
         string? refreshToken =
             await _localStorageService.GetItemAsync<string>(LocalStorageKey.REFRESH_TOKEN);
         LoginUserInfo? loginUserInfo =
             await _localStorageService.GetItemAsync<LoginUserInfo>(LocalStorageKey.USER_INFO);
+        DateTime? expires = await _localStorageService.GetItemAsync<DateTime>(LocalStorageKey.EXPIRES_DATE_TIME);
 
-        if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken) || loginUserInfo == null)
+        if (string.IsNullOrEmpty(idToken) || string.IsNullOrEmpty(refreshToken) || loginUserInfo == null || expires == null)
         {
             return new AuthenticationState(
                 new ClaimsPrincipal(
                     new ClaimsIdentity()));
         }
 
-        List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
-        parameters.Add(new KeyValuePair<string, string>("grant_type", "refresh_token"));
-        parameters.Add(new KeyValuePair<string, string>("refresh_token", refreshToken));
-        HttpResponseMessage httpResponseMessage = await _refreshTokenHttpClient.PostAsync("", new FormUrlEncodedContent(parameters));
-        RefreshTokenResponseDto? refreshTokenResponseDto = await httpResponseMessage.Content.ReadFromJsonAsync<RefreshTokenResponseDto>();
-        if (refreshTokenResponseDto == null)
+        _userCredentialContainer.IdToken = idToken;
+        _userCredentialContainer.RefreshToken = refreshToken;
+
+        //check token lifetime
+        if (DateTime.UtcNow >= expires)
         {
-            return new AuthenticationState(
-                new ClaimsPrincipal(
-                    new ClaimsIdentity()));
+            if (!await RefreshTokenAsync(refreshToken))
+            {
+                return new AuthenticationState(
+                    new ClaimsPrincipal(
+                        new ClaimsIdentity()));
+            }
         }
-
-        _userCredentialContainer.IdToken = refreshTokenResponseDto.IdToken;
-        _userCredentialContainer.RefreshToken = refreshTokenResponseDto.RefreshToken;
-
-        await _localStorageService.SetItemAsync(LocalStorageKey.USER_INFO, loginUserInfo);
-        await _localStorageService.SetItemAsync(LocalStorageKey.ID_TOKEN, refreshTokenResponseDto.IdToken);
-        await _localStorageService.SetItemAsync(LocalStorageKey.REFRESH_TOKEN, refreshTokenResponseDto.RefreshToken);
 
         List<Claim> claims =
         [
@@ -96,11 +92,14 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
         );
     }
 
-    public async Task NotifySignIn(LoginUserInfo loginUserInfo, string accessToken, string refreshToken)
+    public async Task NotifySignIn(LoginUserInfo loginUserInfo, string accessToken, string refreshToken, int expiresIn)
     {
         await _localStorageService.SetItemAsync(LocalStorageKey.USER_INFO, loginUserInfo);
         await _localStorageService.SetItemAsync(LocalStorageKey.ID_TOKEN, accessToken);
         await _localStorageService.SetItemAsync(LocalStorageKey.REFRESH_TOKEN, refreshToken);
+        DateTime current = DateTime.UtcNow;
+        DateTime expires = current.AddSeconds(expiresIn - 10);
+        await _localStorageService.SetItemAsync(LocalStorageKey.EXPIRES_DATE_TIME, expires);
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 
@@ -109,6 +108,7 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
         await _localStorageService.RemoveItemAsync(LocalStorageKey.USER_INFO);
         await _localStorageService.RemoveItemAsync(LocalStorageKey.ID_TOKEN);
         await _localStorageService.RemoveItemAsync(LocalStorageKey.REFRESH_TOKEN);
+        await _localStorageService.RemoveItemAsync(LocalStorageKey.EXPIRES_DATE_TIME);
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 
@@ -129,5 +129,41 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
             _logger.LogError(e.Message);
         }
         return groups;
+    }
+
+    private async Task<bool> RefreshTokenAsync(string refreshToken)
+    {
+        try
+        {
+            List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
+            parameters.Add(new KeyValuePair<string, string>("grant_type", "refresh_token"));
+            parameters.Add(new KeyValuePair<string, string>("refresh_token", refreshToken));
+            HttpResponseMessage httpResponseMessage = await _refreshTokenHttpClient.PostAsync("", new FormUrlEncodedContent(parameters));
+            RefreshTokenResponseDto? refreshTokenResponseDto = await httpResponseMessage.Content.ReadFromJsonAsync<RefreshTokenResponseDto>();
+            if (refreshTokenResponseDto == null)
+            {
+                return false;
+            }
+
+            _userCredentialContainer.IdToken = refreshTokenResponseDto.IdToken;
+            _userCredentialContainer.RefreshToken = refreshTokenResponseDto.RefreshToken;
+
+            //remove exists data
+            await _localStorageService.RemoveItemAsync(LocalStorageKey.ID_TOKEN);
+            await _localStorageService.RemoveItemAsync(LocalStorageKey.REFRESH_TOKEN);
+            await _localStorageService.RemoveItemAsync(LocalStorageKey.EXPIRES_DATE_TIME);
+
+            //update data
+            await _localStorageService.SetItemAsync(LocalStorageKey.ID_TOKEN, refreshTokenResponseDto.IdToken);
+            await _localStorageService.SetItemAsync(LocalStorageKey.REFRESH_TOKEN, refreshTokenResponseDto.RefreshToken);
+            DateTime expires = DateTime.UtcNow.AddSeconds(refreshTokenResponseDto.ExpiresIn - 10);
+            await _localStorageService.SetItemAsync(LocalStorageKey.EXPIRES_DATE_TIME, expires);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            return false;
+        }
+        return true;
     }
 }

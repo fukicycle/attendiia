@@ -32,12 +32,13 @@ public sealed class FirebaseAuthenticationService : IAuthenticationService
                 await _firebaseAuthClient.SignInWithEmailAndPasswordAsync(loginModel.Email, loginModel.Password);
             string idToken = await userCredential.User.GetIdTokenAsync();
             string refreshToken = userCredential.User.Credential.RefreshToken;
+            int expiresIn = userCredential.User.Credential.ExpiresIn;
             LoginUserInfo loginUserInfo = new LoginUserInfo(
                 userCredential.User.Uid,
                 userCredential.User.Info.Email,
                 userCredential.User.Info.DisplayName
             );
-            await _firebaseAuthenticationStateProvider.NotifySignIn(loginUserInfo, idToken, refreshToken);
+            await _firebaseAuthenticationStateProvider.NotifySignIn(loginUserInfo, idToken, refreshToken, expiresIn);
             return true;
         }
         catch (Exception e)
