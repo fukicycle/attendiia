@@ -58,11 +58,6 @@ public sealed class GroupService : IGroupService
         return await _firebaseaDatabaseService.GetItemAsync<Group>(FirebaseDatabaseKeys.GROUP_PATH, groupCode);
     }
 
-    public async Task<List<Group>> GetGroupsAsync()
-    {
-        return await _firebaseaDatabaseService.GetItemsAsync<Group>(FirebaseDatabaseKeys.GROUP_PATH);
-    }
-
     public async Task UpdateGroupAsync(string groupCode, Group group)
     {
         if (!await IsExistsAsync(groupCode))

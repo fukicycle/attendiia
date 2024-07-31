@@ -42,16 +42,10 @@ public sealed class GroupUserService : IGroupUserService
         return groupUsers.SingleOrDefault(a => a.IsCurrent);
     }
 
-    public async Task<List<GroupUser>> GetGroupUsersAsync()
-    {
-        return await _firebaseDatabaseService.GetItemsAsync<GroupUser>(
-            FirebaseDatabaseKeys.GROUP_USER_PATH);
-    }
-
     public async Task<List<GroupUser>> GetGroupUsersByUidAsync(string uid)
     {
-        List<GroupUser> groupUsers = await GetGroupUsersAsync();
-        return groupUsers.Where(a => a.Uid == uid).ToList();
+        return await _firebaseDatabaseService.GetItemsAsync<GroupUser>(
+            FirebaseDatabaseKeys.GROUP_USER_PATH, "Uid", uid);
     }
 
     public async Task UpdateGroupAsync(string id, GroupUser groupUser)
@@ -63,7 +57,7 @@ public sealed class GroupUserService : IGroupUserService
 
     private async Task<bool> IsExistsAsync(GroupUser groupUser)
     {
-        List<GroupUser> groupUsers = await GetGroupUsersAsync();
-        return groupUsers.Any(a => a.Uid == groupUser.Uid && a.GroupCode == groupUser.GroupCode);
+        List<GroupUser> groupUsers = await GetGroupUsersByUidAsync(groupUser.Uid);
+        return groupUsers.Any(a => a.GroupCode == groupUser.GroupCode);
     }
 }

@@ -1,55 +1,78 @@
 using System.Security.Claims;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using System.Net.Http.Headers;
 using Attendiia.Services.Interface;
 using Attendiia.Stores;
-using Newtonsoft.Json;
 using Attendiia.Models;
+using Firebase.Auth.Requests;
+using Attendiia.Dto;
+using System.Net.Http.Json;
 
 namespace Attendiia.Authentication;
 
 public sealed class FirebaseAuthenticationStateProvider : AuthenticationStateProvider
 {
-    private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorageService;
     private readonly IGroupService _groupService;
     private readonly IGroupUserService _groupUserService;
     private readonly UserGroupContainer _userGroupContainer;
+    private readonly UserCredentialContainer _userCredentialContainer;
     private readonly ILogger<FirebaseAuthenticationStateProvider> _logger;
+    private readonly HttpClient _refreshTokenHttpClient;
 
     public FirebaseAuthenticationStateProvider(
-        HttpClient httpClient,
         ILocalStorageService localStorageService,
         IGroupService groupService,
         IGroupUserService groupUserService,
         UserGroupContainer userGroupContainer,
-        ILogger<FirebaseAuthenticationStateProvider> logger)
+        UserCredentialContainer userCredentialContainer,
+        ILogger<FirebaseAuthenticationStateProvider> logger,
+        HttpClient httpClient)
     {
-        _httpClient = httpClient;
         _localStorageService = localStorageService;
         _groupService = groupService;
         _groupUserService = groupUserService;
         _userGroupContainer = userGroupContainer;
+        _userCredentialContainer = userCredentialContainer;
         _logger = logger;
+        _refreshTokenHttpClient = httpClient;
     }
 
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         string? accessToken =
-            await _localStorageService.GetItemAsync<string>(LocalStorageKey.ACCESS_TOKEN);
+            await _localStorageService.GetItemAsync<string>(LocalStorageKey.ID_TOKEN);
+        string? refreshToken =
+            await _localStorageService.GetItemAsync<string>(LocalStorageKey.REFRESH_TOKEN);
         LoginUserInfo? loginUserInfo =
             await _localStorageService.GetItemAsync<LoginUserInfo>(LocalStorageKey.USER_INFO);
 
-        if (string.IsNullOrEmpty(accessToken) || loginUserInfo == null)
+        if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken) || loginUserInfo == null)
         {
             return new AuthenticationState(
                 new ClaimsPrincipal(
                     new ClaimsIdentity()));
         }
 
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", accessToken);
+        List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
+        parameters.Add(new KeyValuePair<string, string>("grant_type", "refresh_token"));
+        parameters.Add(new KeyValuePair<string, string>("refresh_token", refreshToken));
+        HttpResponseMessage httpResponseMessage = await _refreshTokenHttpClient.PostAsync("", new FormUrlEncodedContent(parameters));
+        RefreshTokenResponseDto? refreshTokenResponseDto = await httpResponseMessage.Content.ReadFromJsonAsync<RefreshTokenResponseDto>();
+        if (refreshTokenResponseDto == null)
+        {
+            return new AuthenticationState(
+                new ClaimsPrincipal(
+                    new ClaimsIdentity()));
+        }
+
+        _userCredentialContainer.IdToken = refreshTokenResponseDto.IdToken;
+        _userCredentialContainer.RefreshToken = refreshTokenResponseDto.RefreshToken;
+
+        await _localStorageService.SetItemAsync(LocalStorageKey.USER_INFO, loginUserInfo);
+        await _localStorageService.SetItemAsync(LocalStorageKey.ID_TOKEN, refreshTokenResponseDto.IdToken);
+        await _localStorageService.SetItemAsync(LocalStorageKey.REFRESH_TOKEN, refreshTokenResponseDto.RefreshToken);
 
         List<Claim> claims =
         [
@@ -73,21 +96,19 @@ public sealed class FirebaseAuthenticationStateProvider : AuthenticationStatePro
         );
     }
 
-    public async Task NotifySignIn(LoginUserInfo loginUserInfo, string accessToken)
+    public async Task NotifySignIn(LoginUserInfo loginUserInfo, string accessToken, string refreshToken)
     {
         await _localStorageService.SetItemAsync(LocalStorageKey.USER_INFO, loginUserInfo);
-        await _localStorageService.SetItemAsync(LocalStorageKey.ACCESS_TOKEN, accessToken);
+        await _localStorageService.SetItemAsync(LocalStorageKey.ID_TOKEN, accessToken);
+        await _localStorageService.SetItemAsync(LocalStorageKey.REFRESH_TOKEN, refreshToken);
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 
     public async Task NotifySignOut()
     {
         await _localStorageService.RemoveItemAsync(LocalStorageKey.USER_INFO);
-        await _localStorageService.RemoveItemAsync(LocalStorageKey.ACCESS_TOKEN);
-        if (_httpClient.DefaultRequestHeaders.Authorization != null)
-        {
-            _httpClient.DefaultRequestHeaders.Authorization = null;
-        }
+        await _localStorageService.RemoveItemAsync(LocalStorageKey.ID_TOKEN);
+        await _localStorageService.RemoveItemAsync(LocalStorageKey.REFRESH_TOKEN);
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 

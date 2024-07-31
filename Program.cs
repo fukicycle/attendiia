@@ -9,12 +9,15 @@ using Attendiia.Services;
 using Firebase.Auth;
 using Attendiia.Stores;
 using System.Security.Claims;
+using Firebase.Auth.Providers;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+//hard coding
+builder.Services.AddHttpClient("RefreshToken", client => client.BaseAddress = new Uri("https://securetoken.googleapis.com/v1/token?key=AIzaSyCIKg9EhtaRp4Esc1Qevbq5E2y_muCTnmI"));
+builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("RefreshToken"));
 
 //configuration check
 builder.Services.AddScoped(p =>
@@ -52,13 +55,28 @@ builder.Services.AddScoped<FirebaseAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(
     p => p.GetRequiredService<FirebaseAuthenticationStateProvider>());
 builder.Services.AddScoped<IAuthenticationService, FirebaseAuthenticationService>();
-builder.Services.AddHttpClient("Default", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
-builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Default"));
 builder.Services.AddScoped<IFirebaseDatabaseService, FirebaseDatabaseService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IGroupUserService, GroupUserService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<UserGroupContainer>();
-
+builder.Services.AddScoped<UserCredentialContainer>();
+builder.Services.AddScoped<FirebaseAuthConfig>(a =>
+{
+    var firebaseSettings = a.GetService<FirebaseAuthenticationSettings>();
+    if (firebaseSettings == null)
+    {
+        throw new InvalidOperationException("Unexpected error occured.");
+    }
+    return new FirebaseAuthConfig
+    {
+        ApiKey = firebaseSettings.FirebaseApiKey,
+        AuthDomain = firebaseSettings.FirebaseAuthDomain,
+        Providers = new[] {
+            new EmailProvider()
+        }
+    };
+});
+builder.Services.AddScoped<IFirebaseAuthClient, FirebaseAuthClient>();
 await builder.Build().RunAsync();
