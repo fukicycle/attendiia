@@ -1,6 +1,9 @@
 ﻿@page "/find"
 @attribute [Authorize(Policy = AuthorizePolicy.DEFAULT)]
 @inject UserGroupContainer UserGroupContainer
+@inject NavigationManager NavigationManager
+@inject IGroupService GroupService
+@inject IGroupUserService GroupUserService
 <Animate class="container create" Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.5)">
     <div class="wrapper">
         <div class="card-wrapper">
@@ -25,7 +28,7 @@
                             </div>
                         }
                     </div>
-                    <button>確定</button>
+                    <button @onclick=@DecideButtonOnClick>決定</button>
                 </section>
             }
             <section>
@@ -46,14 +49,14 @@
                 </div>
                 <div class="description">グループコードを持っている場合は下の入力欄にグループコードを入力してグループに参加することができます。<br />大文字小文字は区別されません。</div>
                 <div class="input-group-code">
-                    <input type="text" placeholder="ABCDEFG" />
+                    <input @bind=@groupCode type="text" placeholder="ABCDEFG" />
                 </div>
-                <button>適用</button>
+                <button @onclick=@JoinButtonOnClick>参加</button>
             </section>
         </div>
         <div class="or">または</div>
         <div class="new">
-            <button>新規作成</button>
+            <button @onclick=@CreateNewButtonOnClick>新規作成</button>
         </div>
     </div>
 </Animate>
