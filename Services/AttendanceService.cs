@@ -20,7 +20,9 @@ public sealed class AttendanceService : IAttendanceService
             Guid.NewGuid().ToString(),
             attendanceFormData.Title,
             attendanceFormData.Description,
-            attendanceFormData.AuthorEmail);
+            DateTime.Now,
+            attendanceFormData.AuthorDisplayName,
+            attendanceFormData.GroupCode);
         await _firebaseDatabaseService.AddItemAsync(
             FirebaseDatabaseKeys.ATTENDANCE_PATH,
             attendance.Id,
@@ -67,7 +69,9 @@ public sealed class AttendanceService : IAttendanceService
             newId,
             attendanceFormData.Title,
             attendanceFormData.Description,
-            attendanceFormData.AuthorEmail,
+            DateTime.Now,
+            attendanceFormData.AuthorDisplayName,
+            attendanceFormData.GroupCode,
             true);//更新フラグ
         await _firebaseDatabaseService.AddItemAsync(
             FirebaseDatabaseKeys.ATTENDANCE_PATH, attendance.Id, attendance);

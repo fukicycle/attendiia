@@ -17,7 +17,8 @@
                 <ValidationMessage For="() => attendanceCreateForm.Description" />
             </div>
             <InputTextArea disabled=@isLoading @bind-Value=@attendanceCreateForm.Description />
-            <InputText hidden @bind-Value=@attendanceCreateForm.AuthorEmail />
+            <InputText hidden @bind-Value=@attendanceCreateForm.AuthorDisplayName />
+            <InputText hidden @bind-Value=@attendanceCreateForm.GroupCode />
             <button disabled=@isLoading type="submit">作成する</button>
         </EditForm>
         @if (isLoading)

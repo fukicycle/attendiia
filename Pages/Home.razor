@@ -15,7 +15,8 @@
                 @foreach (var attendance in attendances)
                 {
                     <div class="list-item active">
-                        <div class="create-info">@attendance.CreateDateTime.ToString("yyyy-MM-dd")に作成されました</div>
+                        <div class="create-info">
+                            @attendance.CreateDateTime.ToString("yyyy-MM-dd")に@(attendance.AuthorDisplayName)によって作成されました</div>
                         <div class="title">@attendance.Title</div>
                         <div class="description">@attendance.Description</div>
                     </div>

@@ -1,4 +1,5 @@
-﻿using Attendiia.Forms;
+﻿using System.Security.Claims;
+using Attendiia.Forms;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
@@ -20,12 +21,14 @@ public partial class Attendance
             throw new ArgumentNullException("ログインユーザの情報を取得する際にエラーが発生しました。管理者へ連絡してください。");
         }
         AuthenticationState state = await authenticationState;
-        string? email = state.User.Identity?.Name;
-        if (string.IsNullOrEmpty(email))
+        string? displayName = state.User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Name)?.Value;
+        string? groupCode = state.User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.UserData)?.Value;
+        if (string.IsNullOrEmpty(displayName) || string.IsNullOrEmpty(groupCode))
         {
             throw new ArgumentNullException("ログインに成功していますが、認証情報を取得することができません。管理者へ連絡してください。");
         }
-        attendanceCreateForm.AuthorEmail = email;
+        attendanceCreateForm.AuthorDisplayName = displayName;
+        attendanceCreateForm.GroupCode = groupCode;
         await base.OnInitializedAsync();
         isLoading = false;
     }
