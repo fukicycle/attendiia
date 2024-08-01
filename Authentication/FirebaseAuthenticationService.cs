@@ -27,9 +27,6 @@ public sealed class FirebaseAuthenticationService : IAuthenticationService
     {
         try
         {
-            GoogleProvider provider = new GoogleProvider();
-            var hoge = new FirebaseAdmin.Auth.Providers.OidcProviderConfigArgs();
-            await _firebaseAuthClient.SignInWithCredentialAsync(GoogleProvider.GetCredential(""));
             UserCredential userCredential =
                 await _firebaseAuthClient.SignInWithEmailAndPasswordAsync(loginModel.Email, loginModel.Password);
             string idToken = await userCredential.User.GetIdTokenAsync();
