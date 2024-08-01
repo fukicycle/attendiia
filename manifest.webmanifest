@@ -1,0 +1,22 @@
+{
+  "name": "アテンディア",
+  "short_name": "アテンディア",
+  "id": "./",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#385C33",
+  "theme_color": "#385C33",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}

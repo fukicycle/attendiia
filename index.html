@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>アテンディア</title>
+    <base href="/attendiia/" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link href="Attendiia.styles.css" rel="stylesheet" />
+    <link href="manifest.webmanifest" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=RocknRoll+One&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <div class="splash">
+            <div class="loader"></div>
+            <div>リソースを読み込み中</div>
+            <div>初回起動時は長くなる可能性があります</div>
+            <div class="loader-text"></div>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui">
+    </div>
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <script src="_content/BlazorAnimate/blazorAnimateInterop.js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIKg9EhtaRp4Esc1Qevbq5E2y_muCTnmI",
+            authDomain: "attendiia.firebaseapp.com",
+            projectId: "attendiia",
+            storageBucket: "attendiia.appspot.com",
+            messagingSenderId: "547539304503",
+            appId: "1:547539304503:web:c14fbe48fc41eddb357fb2",
+            measurementId: "G-MWC16232HH"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+    <script src="brotliloader.min.js" type="module"></script>
+</body>
+
+</html>
