@@ -1,8 +1,24 @@
 ﻿@page "/create/group"
 @attribute [Authorize(Policy = AuthorizePolicy.DEFAULT)]
+@inject IGroupService GroupService
+@inject IGroupUserService GroupUserService
+@inject NavigationManager NavigationManager
 <Animate class="container create" Animation="Animations.FadeUp">
     <div class="contents">
-        <div>新しいグループを作成</div>
+        <div class="title">新しいグループを作成</div>
+        <EditForm class="input-area" Model="@groupCreateForm" OnValidSubmit="OnValidRequest">
+            <DataAnnotationsValidator />
+            <div class="input-label">
+                <div>グループ名(20文字まで)</div>
+                <ValidationMessage For="() => groupCreateForm.Name" />
+            </div>
+            <InputText disabled=@isLoading @bind-Value=@groupCreateForm.Name />
+            <button disabled=@isLoading type="submit">作成する</button>
+        </EditForm>
+        @if (isLoading)
+        {
+            <Loader />
+        }
     </div>
-    <Return ReturnTo="/" />
+    <Return ReturnTo="" />
 </Animate>

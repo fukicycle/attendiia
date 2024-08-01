@@ -1,36 +1,31 @@
 ﻿using System.Security.Claims;
+using Attendiia.Forms;
 using Attendiia.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
-namespace Attendiia.Pages;
-
-public partial class Find
+namespace Attendiia.Pages.Create;
+public partial class Group
 {
     [CascadingParameter]
     public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
-    private string groupCode { get; set; } = string.Empty;
+    private GroupCreateForm groupCreateForm = new GroupCreateForm();
+    private bool isLoading = false;
     private string message = string.Empty;
-    private void CreateNewButtonOnClick()
-    {
-        NavigationManager.NavigateTo("create/group");
-    }
 
-    private async Task JoinButtonOnClick()
+    private async Task OnValidRequest()
     {
+        isLoading = true;
         try
         {
-            if (string.IsNullOrEmpty(groupCode))
-            {
-                throw new NotSupportedException("グループコードを入力してください。");
-            }
+            string groupCode = await GroupService.CreateGroupAsync(groupCreateForm.Name);
             var authenticationState = await AuthenticationState;
             string? uid = authenticationState.User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
             if (uid == default)
             {
                 throw new Exception("ユーザ情報の取得に失敗しました。");
             }
-            Group group = await GroupService.GetGroupByCodeAsync(groupCode);
+            Models.Group group = await GroupService.GetGroupByCodeAsync(groupCode);
             List<GroupUser> groupUsers = await GroupUserService.GetGroupUsersByUidAsync(uid);
             GroupUser? existsGroupUser = null;
             foreach (GroupUser groupUser in groupUsers)
@@ -68,10 +63,9 @@ public partial class Find
         {
             message = e.Message;
         }
-    }
-
-    private async Task DecideButtonOnClick()
-    {
-        await Task.CompletedTask;
+        finally
+        {
+            isLoading = false;
+        }
     }
 }
