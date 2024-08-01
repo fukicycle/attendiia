@@ -140,7 +140,7 @@ input {
     height: 100%;
 }
 
-.container.create {
+.container.hide-menu {
     position: fixed;
     top: 56px;
     left: 0;

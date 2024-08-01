@@ -4,7 +4,7 @@
 @attribute [Authorize(Policy = AuthorizePolicy.REQUIRE_GROUP)]
 <Animate class="container" Animation="Animations.Fade">
     <div class="wrapper">
-        <div>回答待ち(@attendances.Count)</div>
+        <div>回答待ち(@unresponsedAttendances.Count)</div>
         <div class="list">
             @if (isLoading)
             {
@@ -12,11 +12,23 @@
             }
             else
             {
-                @foreach (var attendance in attendances)
+                @foreach (var attendance in unresponsedAttendances)
                 {
-                    <div class="list-item active">
+                    <div class="list-item active" @onclick=@(() => ListItemOnClick(attendance.Id))>
                         <div class="create-info">
-                            @attendance.CreateDateTime.ToString("yyyy-MM-dd")に@(attendance.AuthorDisplayName)によって作成されました</div>
+                            <span>@attendance.CreateDateTime.ToString("yyyy-MM-dd")に@(attendance.AuthorDisplayName)によって</span>
+                            <span>
+                                @if (attendance.IsUpdated)
+                                {
+                                    <strong>更新</strong>
+                                }
+                                else
+                                {
+                                    <span>作成</span>
+                                }
+                            </span>
+                            <span>されました</span>
+                        </div>
                         <div class="title">@attendance.Title</div>
                         <div class="description">@attendance.Description</div>
                     </div>
@@ -25,9 +37,25 @@
         </div>
         <div>回答済み</div>
         <div class="list">
+            @if (isLoading)
+            {
+                <Loader />
+            }
+            else
+            {
+                @foreach (var attendance in responsedAttendances)
+                {
+                    <div class="list-item" @onclick=@(() => ListItemOnClick(attendance.Id))>
+                        <div class="create-info">
+                            @attendance.ResponseDateTime.ToString("yyyy-MM-dd")に回答しました</div>
+                        <div class="title">@attendance.Title</div>
+                        <div class="description">@attendance.Description</div>
+                    </div>
+                }
+            }
         </div>
         <div class="create">
-            <AddButton OnClick="@(() => NavigationManager.NavigateTo("create/attendance"))" />
+            <AddButton OnClick="@AddButtonOnClick" />
         </div>
     </div>
 </Animate>

@@ -2,7 +2,7 @@
 @inject IAttendanceService AttendanceService
 @inject NavigationManager NavigationManager
 @attribute [Authorize(Policy = AuthorizePolicy.REQUIRE_GROUP)]
-<Animate class="container create" Animation="Animations.FadeUp">
+<Animate class="container hide-menu" Animation="Animations.FadeUp">
     <div class="contents">
         <div class="title">新しい出欠を作成</div>
         <EditForm class="input-area" Model="@attendanceCreateForm" OnValidSubmit="OnValidRequest">

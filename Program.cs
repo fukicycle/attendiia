@@ -60,6 +60,7 @@ builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IGroupUserService, GroupUserService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAttendanceResponseService, AttendanceResponseService>();
 builder.Services.AddScoped<UserGroupContainer>();
 builder.Services.AddScoped<UserCredentialContainer>();
 builder.Services.AddScoped<FirebaseAuthConfig>(a =>

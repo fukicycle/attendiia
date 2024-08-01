@@ -7,10 +7,15 @@ namespace Attendiia.Services;
 public sealed class AttendanceService : IAttendanceService
 {
     private readonly IFirebaseDatabaseService _firebaseDatabaseService;
+    private readonly IAttendanceResponseService _attendanceResponseService;
     private readonly ILogger<AttendanceService> _logger;
-    public AttendanceService(IFirebaseDatabaseService firebaseDatabaseService, ILogger<AttendanceService> logger)
+    public AttendanceService(
+        IFirebaseDatabaseService firebaseDatabaseService,
+        IAttendanceResponseService attendanceResponseService,
+        ILogger<AttendanceService> logger)
     {
         _firebaseDatabaseService = firebaseDatabaseService;
+        _attendanceResponseService = attendanceResponseService;
         _logger = logger;
     }
 
@@ -53,8 +58,47 @@ public sealed class AttendanceService : IAttendanceService
     public async Task<List<Attendance>> GetAttendancesByGroupCodeAsync(string groupCode)
     {
         List<Attendance> attendances = await _firebaseDatabaseService.GetItemsAsync<Attendance>(
-            FirebaseDatabaseKeys.ATTENDANCE_PATH, "GroupCode", groupCode);
+            FirebaseDatabaseKeys.ATTENDANCE_PATH, nameof(Attendance.GroupCode), groupCode);
         return attendances.OrderByDescending(a => a.CreateDateTime).ToList();
+    }
+
+    public async Task<List<AttendanceUnresponseItem>> GetUnresponseAttendancesAsync(string groupCode, string uid)
+    {
+        List<Attendance> attendances = await GetAttendancesByGroupCodeAsync(groupCode);
+        List<AttendanceResponse> attendanceResponses =
+         await _attendanceResponseService.GetResponsesByUserIdAsync(uid);
+        return attendances
+                .Where(a => !attendanceResponses.Any(b => b.AttendanceId == a.Id))
+                .Select(a => new AttendanceUnresponseItem(
+                    a.Id,
+                    a.Title,
+                    a.Description,
+                    a.CreateDateTime,
+                    a.AuthorDisplayName,
+                    a.GroupCode,
+                    a.IsUpdated))
+                .OrderByDescending(a => a.CreateDateTime)
+                .ToList();
+    }
+
+    public async Task<List<AttendanceResponseItem>> GetResponseAttendancesAsync(string groupCode, string uid)
+    {
+        List<Attendance> attendances = await GetAttendancesByGroupCodeAsync(groupCode);
+        List<AttendanceResponse> attendanceResponses =
+         await _attendanceResponseService.GetResponsesByUserIdAsync(uid);
+        return attendances
+                .Where(a => attendanceResponses.Any(b => b.AttendanceId == a.Id))
+                .Select(a => new AttendanceResponseItem(
+                    a.Id,
+                    a.Title,
+                    a.Description,
+                    a.CreateDateTime,
+                    a.AuthorDisplayName,
+                    a.GroupCode,
+                    a.IsUpdated,
+                    attendanceResponses.First(b => b.AttendanceId == a.Id).ResponseDateTime))
+                .OrderByDescending(a => a.ResponseDateTime)
+                .ToList();
     }
 
     public async Task UpdateAttendanceAsync(string id, AttendanceCreateForm attendanceFormData)

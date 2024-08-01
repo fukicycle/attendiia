@@ -3,7 +3,7 @@
 @inject IGroupService GroupService
 @inject IGroupUserService GroupUserService
 @inject NavigationManager NavigationManager
-<Animate class="container create" Animation="Animations.FadeUp">
+<Animate class="container hide-menu" Animation="Animations.FadeUp">
     <div class="contents">
         <div class="title">新しいグループを作成</div>
         <EditForm class="input-area" Model="@groupCreateForm" OnValidSubmit="OnValidRequest">

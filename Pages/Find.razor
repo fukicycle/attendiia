@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IGroupService GroupService
 @inject IGroupUserService GroupUserService
-<Animate class="container create" Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.5)">
+<Animate class="container hide-menu" Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.5)">
     <div class="wrapper">
         <div class="card-wrapper">
             @if (UserGroupContainer.Groups.Any())
