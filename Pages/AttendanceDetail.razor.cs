@@ -12,6 +12,7 @@ public partial class AttendanceDetail
 
     [CascadingParameter]
     public Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+    private string? comment;
     private Attendance? attendance;
     private bool isLoading = false;
     private string message = string.Empty;
@@ -49,7 +50,7 @@ public partial class AttendanceDetail
         try
         {
             isLoading = true;
-            await AttendanceResponseService.SubmitResponseAsync(uid, Id, ResponseType.OK);
+            await AttendanceResponseService.SubmitResponseAsync(uid, Id, comment, ResponseType.OK);
             NavigationManager.NavigateTo("");
         }
         catch (Exception e)
@@ -67,7 +68,7 @@ public partial class AttendanceDetail
         try
         {
             isLoading = true;
-            await AttendanceResponseService.SubmitResponseAsync(uid, Id, ResponseType.HOLD);
+            await AttendanceResponseService.SubmitResponseAsync(uid, Id, comment, ResponseType.HOLD);
             NavigationManager.NavigateTo("");
         }
         catch (Exception e)
@@ -85,7 +86,7 @@ public partial class AttendanceDetail
         try
         {
             isLoading = true;
-            await AttendanceResponseService.SubmitResponseAsync(uid, Id, ResponseType.NG);
+            await AttendanceResponseService.SubmitResponseAsync(uid, Id, comment, ResponseType.NG);
             NavigationManager.NavigateTo("");
         }
         catch (Exception e)

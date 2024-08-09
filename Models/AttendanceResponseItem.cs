@@ -2,7 +2,16 @@
 
 public sealed class AttendanceResponseItem
 {
-    public AttendanceResponseItem(string id, string title, string description, DateTime createDateTime, string authorDisplayName, string groupCode, bool updated, DateTime responseDateTime)
+    public AttendanceResponseItem(
+        string id,
+        string title,
+        string description,
+        DateTime createDateTime,
+        string authorDisplayName,
+        string groupCode,
+        bool updated,
+        string? comment,
+        DateTime responseDateTime)
     {
         Id = id;
         Title = title;
@@ -11,6 +20,7 @@ public sealed class AttendanceResponseItem
         AuthorDisplayName = authorDisplayName;
         GroupCode = groupCode;
         IsUpdated = updated;
+        Comment = comment;
         ResponseDateTime = responseDateTime;
     }
     public string Id { get; }
@@ -20,5 +30,6 @@ public sealed class AttendanceResponseItem
     public string AuthorDisplayName { get; }
     public string GroupCode { get; }
     public bool IsUpdated { get; }
+    public string? Comment { get; }
     public DateTime ResponseDateTime { get; }
 }

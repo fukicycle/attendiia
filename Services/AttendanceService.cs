@@ -96,6 +96,7 @@ public sealed class AttendanceService : IAttendanceService
                     a.AuthorDisplayName,
                     a.GroupCode,
                     a.IsUpdated,
+                    attendanceResponses.First(b => b.AttendanceId == a.Id).Comment,
                     attendanceResponses.First(b => b.AttendanceId == a.Id).ResponseDateTime))
                 .OrderByDescending(a => a.ResponseDateTime)
                 .ToList();

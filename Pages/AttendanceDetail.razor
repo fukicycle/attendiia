@@ -13,8 +13,12 @@
             <div class="title">@attendance?.Title</div>
             <div class="description">@attendance?.Description</div>
         </div>
+        <div>回答一覧</div>
         <div class="responses">
         </div>
+        <div>コメント</div>
+        <textarea @bind=@comment></textarea>
+        <div>回答</div>
         <div class="three actions">
             <button @onclick=@OKButtonOnClick>
                 <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">

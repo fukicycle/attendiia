@@ -20,10 +20,10 @@ public sealed class AttendanceResponseService : IAttendanceResponseService
             FirebaseDatabaseKeys.ATTENDANCE_RESPONSE_PATH, nameof(AttendanceResponse.Uid), uid);
     }
 
-    public async Task SubmitResponseAsync(string uid, string attendanceId, ResponseType responseType)
+    public async Task SubmitResponseAsync(string uid, string attendanceId, string? comment, ResponseType responseType)
     {
         string id = Guid.NewGuid().ToString();
-        AttendanceResponse attendanceResponse = new AttendanceResponse(id, uid, attendanceId, responseType, DateTime.Now);
+        AttendanceResponse attendanceResponse = new AttendanceResponse(id, uid, attendanceId, comment, responseType, DateTime.Now);
         await _firebaseDatabaseService.AddItemAsync(
             FirebaseDatabaseKeys.ATTENDANCE_RESPONSE_PATH, id, attendanceResponse);
     }
